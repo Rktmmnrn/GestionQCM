@@ -173,7 +173,7 @@
                     <h1 class="mb-1">❓ Questions QCM</h1>
                     <p class="mb-0">Banque de questions à choix multiples</p>
                 </div>
-                <a href="form.jsp" class="btn btn-light">
+                <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-light">
                     ➕ Ajouter une question
                 </a>
             </div>
@@ -190,7 +190,7 @@
                         <div class="empty-state-icon">📭</div>
                         <h4>Aucune question trouvée</h4>
                         <p>Commencez par ajouter des questions QCM à la base de données.</p>
-                        <a href="form.jsp" class="btn btn-primary">
+                        <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-primary">
                             Ajouter la première question
                         </a>
                     </div>
@@ -259,7 +259,7 @@
                         <!-- Pied de la question -->
                         <div class="qcm-footer">
                             <a 
-                                href="form.jsp?id=${qcm.numQuest}" 
+                                href="${pageContext.request.contextPath}/qcm?action=edit&id=${qcm.numQuest}" 
                                 class="btn btn-primary btn-sm"
                             >
                                 ✏️ Modifier
@@ -303,16 +303,7 @@
     <script>
         function confirmerSuppression(idQCM) {
             if (confirm(`Êtes-vous sûr de vouloir supprimer la question #${idQCM} ?\n\nCette action est irréversible.`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'delete.jsp';
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'id';
-                input.value = idQCM;
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
+                window.location.href = '${pageContext.request.contextPath}/qcm?action=delete&id=' + idQCM;
             }
         }
     </script>

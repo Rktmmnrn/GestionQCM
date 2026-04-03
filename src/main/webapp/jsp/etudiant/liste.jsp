@@ -113,7 +113,7 @@
                     <h1 class="mb-1">👥 Liste des Étudiants</h1>
                     <p class="mb-0">Gestion complète des profils étudiants</p>
                 </div>
-                <a href="form.jsp" class="btn btn-light btn-ajouter">
+                <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-light btn-ajouter">
                     <i class="bi bi-plus-circle"></i> Ajouter un étudiant
                 </a>
             </div>
@@ -168,7 +168,7 @@
                         <div class="empty-state-icon">📭</div>
                         <h4>Aucun étudiant trouvé</h4>
                         <p>Commencez par ajouter des étudiants à la base de données.</p>
-                        <a href="form.jsp" class="btn btn-primary">
+                        <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">
                             Ajouter le premier étudiant
                         </a>
                     </div>
@@ -229,7 +229,7 @@
                                     <td>
                                         <div class="action-buttons">
                                             <a 
-                                                href="form.jsp?id=${etudiant.numEtudiant}" 
+                                                href="${pageContext.request.contextPath}/etudiant?action=edit&id=${etudiant.numEtudiant}" 
                                                 class="btn btn-sm btn-primary"
                                                 title="Modifier"
                                             >
@@ -273,17 +273,7 @@
     <script>
         function confirmerSuppression(numEtudiant, nom) {
             if (confirm(`Êtes-vous sûr de vouloir supprimer l'étudiant "${nom}" (${numEtudiant}) ?\n\nCette action est irréversible.`)) {
-                // Simuler l'envoi du formulaire de suppression
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'delete.jsp';
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'id';
-                input.value = numEtudiant;
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
+                window.location.href = '${pageContext.request.contextPath}/etudiant?action=delete&id=' + numEtudiant;
             }
         }
     </script>

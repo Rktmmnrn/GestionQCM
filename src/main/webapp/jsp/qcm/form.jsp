@@ -230,7 +230,8 @@
         </c:if>
 
         <!-- Formulaire -->
-        <form method="POST" action="save.jsp" class="needs-validation" novalidate>
+        <form method="POST" action="${pageContext.request.contextPath}/qcm" class="needs-validation" novalidate>
+            <input type="hidden" name="action" value="<c:choose><c:when test='${not empty param.id}'>update</c:when><c:otherwise>create</c:otherwise></c:choose>">
             <!-- Section Question -->
             <div class="form-section">
                 <div class="form-section-title">📝 Question</div>

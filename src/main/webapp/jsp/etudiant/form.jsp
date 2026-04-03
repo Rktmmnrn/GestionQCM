@@ -148,7 +148,8 @@
         </c:if>
 
         <!-- Formulaire -->
-        <form method="POST" action="save.jsp" class="needs-validation" novalidate>
+        <form method="POST" action="${pageContext.request.contextPath}/etudiant" class="needs-validation" novalidate>
+            <input type="hidden" name="action" value="<c:choose><c:when test='${not empty param.id}'>update</c:when><c:otherwise>create</c:otherwise></c:choose>">
             <!-- Champ: Numéro d'étudiant -->
             <div class="form-group">
                 <label for="numEtudiant" class="form-label required-field">
