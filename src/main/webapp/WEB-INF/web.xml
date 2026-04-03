@@ -1,7 +1,48 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
-
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+    
+    <servlet>
+        <servlet-name>EtudiantServlet</servlet-name>
+        <servlet-class>com.examen.servlet.EtudiantServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EtudiantServlet</servlet-name>
+        <url-pattern>/etudiant</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>QCMServlet</servlet-name>
+        <servlet-class>com.examen.servlet.QCMServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>QCMServlet</servlet-name>
+        <url-pattern>/qcm</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ExamenServlet</servlet-name>
+        <servlet-class>com.examen.servlet.ExamenServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ExamenServlet</servlet-name>
+        <url-pattern>/examen</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>EmailServlet</servlet-name>
+        <servlet-class>com.examen.servlet.EmailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EmailServlet</servlet-name>
+        <url-pattern>/email</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Page d'accueil -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

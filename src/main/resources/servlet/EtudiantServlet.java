@@ -72,7 +72,7 @@ public class EtudiantServlet extends HttpServlet {
             throws ServletException, IOException {
         List<Etudiant> etudiants = etudiantDAO.findAll();
         request.setAttribute("etudiants", etudiants);
-        request.getRequestDispatcher("/WEB-INF/views/etudiant/list.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/etudiant/liste.jsp").forward(request, response);
     }
     
     /**
@@ -80,7 +80,7 @@ public class EtudiantServlet extends HttpServlet {
      */
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/etudiant/form.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/etudiant/form.jsp").forward(request, response);
     }
     
     /**
@@ -91,7 +91,7 @@ public class EtudiantServlet extends HttpServlet {
         String numEtudiant = request.getParameter("id");
         Etudiant etudiant = etudiantDAO.findById(numEtudiant);
         request.setAttribute("etudiant", etudiant);
-        request.getRequestDispatcher("/WEB-INF/views/etudiant/form.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/etudiant/form.jsp").forward(request, response);
     }
     
     /**
@@ -166,6 +166,6 @@ public class EtudiantServlet extends HttpServlet {
         request.setAttribute("etudiants", etudiants);
         request.setAttribute("searchType", searchType);
         request.setAttribute("searchValue", searchValue);
-        request.getRequestDispatcher("/WEB-INF/views/etudiant/list.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/etudiant/liste.jsp").forward(request, response);
     }
 }

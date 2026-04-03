@@ -69,7 +69,7 @@ public class QCMServlet extends HttpServlet {
             throws ServletException, IOException {
         List<QCM> questions = qcmDAO.findAll();
         request.setAttribute("questions", questions);
-        request.getRequestDispatcher("/WEB-INF/views/qcm/list.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/qcm/liste.jsp").forward(request, response);
     }
     
     /**
@@ -77,7 +77,7 @@ public class QCMServlet extends HttpServlet {
      */
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/qcm/form.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/qcm/form.jsp").forward(request, response);
     }
     
     /**
@@ -92,7 +92,7 @@ public class QCMServlet extends HttpServlet {
                 .findFirst()
                 .orElse(null);
         request.setAttribute("question", question);
-        request.getRequestDispatcher("/WEB-INF/views/qcm/form.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/qcm/form.jsp").forward(request, response);
     }
     
     /**
