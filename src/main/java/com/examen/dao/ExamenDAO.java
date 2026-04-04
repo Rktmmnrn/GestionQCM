@@ -24,7 +24,7 @@ public class ExamenDAO {
      * @return true si création réussie, false sinon
      */
     public boolean create(Examen examen) {
-        String sql = "INSERT INTO examens (num_etudiant, annee_univ, note, date_examen) " +
+        String sql = "INSERT INTO EXAMEN (num_etudiant, annee_univ, note, date_examen) " +
                      "VALUES (?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -55,7 +55,7 @@ public class ExamenDAO {
      */
     public List<Examen> findAll() {
         List<Examen> examens = new ArrayList<>();
-        String sql = "SELECT * FROM examens ORDER BY date_examen DESC";
+        String sql = "SELECT * FROM EXAMEN ORDER BY date_examen DESC";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -76,7 +76,7 @@ public class ExamenDAO {
      */
     public List<Examen> findByEtudiant(String numEtudiant) {
         List<Examen> examens = new ArrayList<>();
-        String sql = "SELECT * FROM examens WHERE num_etudiant = ? ORDER BY date_examen DESC";
+        String sql = "SELECT * FROM EXAMEN WHERE num_etudiant = ? ORDER BY date_examen DESC";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, numEtudiant);
@@ -97,8 +97,8 @@ public class ExamenDAO {
      */
     public List<Examen> getClassement() {
         List<Examen> examens = new ArrayList<>();
-        String sql = "SELECT e.*, et.nom, et.prenoms FROM examens e " +
-                     "JOIN etudiants et ON e.num_etudiant = et.num_etudiant " +
+        String sql = "SELECT e.*, et.nom, et.prenoms FROM EXAMEN e " +
+                     "JOIN ETUDIANT et ON e.num_etudiant = et.num_etudiant " +
                      "ORDER BY e.note DESC";
         
         try (Statement stmt = connection.createStatement();

@@ -14,9 +14,9 @@ public class DBConnexion {
     private static DBConnexion instance;
     
     // Paramètres de connexion à la base de données
-    private static final String URL = "jdbc:mysql://localhost:3306/gestion_examens?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "root";
+    private static final String URL = "jdbc:mysql://localhost:3306/gestion_qcm?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "fenohery";
+    private static final String PASSWORD = "admin";
     
     // Objet Connection
     private Connection connection;

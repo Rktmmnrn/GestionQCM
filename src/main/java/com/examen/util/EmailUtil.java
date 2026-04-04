@@ -31,9 +31,9 @@ public class EmailUtil {
                 // Configuration par défaut (à remplacer par vos valeurs)
                 emailConfig.setProperty("mail.smtp.host", "smtp.gmail.com");
                 emailConfig.setProperty("mail.smtp.port", "587");
-                emailConfig.setProperty("mail.username", "votre.email@gmail.com");
-                emailConfig.setProperty("mail.password", "votre-mot-de-passe");
-                emailConfig.setProperty("mail.from", "votre.email@gmail.com");
+                emailConfig.setProperty("mail.username", "rfanomezaniavo.com");
+                emailConfig.setProperty("mail.password", "ngjo eody zklq vxib");
+                emailConfig.setProperty("mail.from", "rfanomezaniavo@gmail.com");
             }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement de la configuration email: " + e.getMessage());

@@ -23,7 +23,7 @@ public class EtudiantDAO {
      * @return true si création réussie, false sinon
      */
     public boolean create(Etudiant etudiant) {
-        String sql = "INSERT INTO etudiants (num_etudiant, nom, prenoms, niveau, adr_email) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ETUDIANT (num_etudiant, nom, prenoms, niveau, adr_email) VALUES (?, ?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, etudiant.getNumEtudiant());
@@ -45,7 +45,7 @@ public class EtudiantDAO {
      */
     public List<Etudiant> findAll() {
         List<Etudiant> etudiants = new ArrayList<>();
-        String sql = "SELECT * FROM etudiants ORDER BY nom, prenoms";
+        String sql = "SELECT * FROM ETUDIANT ORDER BY nom, prenoms";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -65,7 +65,7 @@ public class EtudiantDAO {
      * @return l'étudiant trouvé ou null
      */
     public Etudiant findById(String numEtudiant) {
-        String sql = "SELECT * FROM etudiants WHERE num_etudiant = ?";
+        String sql = "SELECT * FROM ETUDIANT WHERE num_etudiant = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, numEtudiant);
@@ -87,7 +87,7 @@ public class EtudiantDAO {
      */
     public List<Etudiant> findByNom(String nom) {
         List<Etudiant> etudiants = new ArrayList<>();
-        String sql = "SELECT * FROM etudiants WHERE nom LIKE ? ORDER BY nom, prenoms";
+        String sql = "SELECT * FROM ETUDIANT WHERE nom LIKE ? ORDER BY nom, prenoms";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, "%" + nom + "%");
@@ -109,7 +109,7 @@ public class EtudiantDAO {
      */
     public List<Etudiant> findByNiveau(String niveau) {
         List<Etudiant> etudiants = new ArrayList<>();
-        String sql = "SELECT * FROM etudiants WHERE niveau = ? ORDER BY nom, prenoms";
+        String sql = "SELECT * FROM ETUDIANT WHERE niveau = ? ORDER BY nom, prenoms";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, niveau);
@@ -130,7 +130,7 @@ public class EtudiantDAO {
      * @return true si mise à jour réussie, false sinon
      */
     public boolean update(Etudiant etudiant) {
-        String sql = "UPDATE etudiants SET nom = ?, prenoms = ?, niveau = ?, adr_email = ? WHERE num_etudiant = ?";
+        String sql = "UPDATE ETUDIANT SET nom = ?, prenoms = ?, niveau = ?, adr_email = ? WHERE num_etudiant = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, etudiant.getNom());
@@ -152,7 +152,7 @@ public class EtudiantDAO {
      * @return true si suppression réussie, false sinon
      */
     public boolean delete(String numEtudiant) {
-        String sql = "DELETE FROM etudiants WHERE num_etudiant = ?";
+        String sql = "DELETE FROM ETUDIANT WHERE num_etudiant = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, numEtudiant);

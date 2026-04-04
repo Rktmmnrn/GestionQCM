@@ -5,41 +5,8 @@
          https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
     
-    <servlet>
-        <servlet-name>EtudiantServlet</servlet-name>
-        <servlet-class>com.examen.servlet.EtudiantServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>EtudiantServlet</servlet-name>
-        <url-pattern>/etudiant</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>QCMServlet</servlet-name>
-        <servlet-class>com.examen.servlet.QCMServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>QCMServlet</servlet-name>
-        <url-pattern>/qcm</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>ExamenServlet</servlet-name>
-        <servlet-class>com.examen.servlet.ExamenServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ExamenServlet</servlet-name>
-        <url-pattern>/examen</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>EmailServlet</servlet-name>
-        <servlet-class>com.examen.servlet.EmailServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>EmailServlet</servlet-name>
-        <url-pattern>/email</url-pattern>
-    </servlet-mapping>
+    <!-- Les servlets sont déclarées via @WebServlet dans les classes -->
+    <!-- Voir : com.examen.servlet.{EtudiantServlet, QCMServlet, ExamenServlet, EmailServlet} -->
     
     <!-- Page d'accueil -->
     <welcome-file-list>

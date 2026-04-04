@@ -23,7 +23,7 @@ public class QCMDAO {
      * @return true si création réussie, false sinon
      */
     public boolean create(QCM qcm) {
-        String sql = "INSERT INTO qcm (num_quest, question, reponse1, reponse2, reponse3, reponse4, bonne_rep) " +
+        String sql = "INSERT INTO QCM (num_quest, question, reponse1, reponse2, reponse3, reponse4, bonne_rep) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -48,7 +48,7 @@ public class QCMDAO {
      */
     public List<QCM> findAll() {
         List<QCM> questions = new ArrayList<>();
-        String sql = "SELECT * FROM qcm ORDER BY num_quest";
+        String sql = "SELECT * FROM QCM ORDER BY num_quest";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -68,7 +68,7 @@ public class QCMDAO {
      * @return true si mise à jour réussie, false sinon
      */
     public boolean update(QCM qcm) {
-        String sql = "UPDATE qcm SET question = ?, reponse1 = ?, reponse2 = ?, " +
+        String sql = "UPDATE QCM SET question = ?, reponse1 = ?, reponse2 = ?, " +
                      "reponse3 = ?, reponse4 = ?, bonne_rep = ? WHERE num_quest = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -93,7 +93,7 @@ public class QCMDAO {
      * @return true si suppression réussie, false sinon
      */
     public boolean delete(int numQuest) {
-        String sql = "DELETE FROM qcm WHERE num_quest = ?";
+        String sql = "DELETE FROM QCM WHERE num_quest = ?";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, numQuest);
@@ -110,7 +110,7 @@ public class QCMDAO {
      */
     public List<QCM> get10Random() {
         List<QCM> questions = new ArrayList<>();
-        String sql = "SELECT * FROM qcm ORDER BY RAND() LIMIT 10";
+        String sql = "SELECT * FROM QCM ORDER BY RAND() LIMIT 10";
         
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
