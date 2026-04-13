@@ -5,420 +5,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire QCM</title>
-    <!-- Bootstrap 5 CDN -->
+    <title><c:choose><c:when test="${not empty question}">Modifier</c:when><c:otherwise>Ajouter</c:otherwise></c:choose> une question</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0d6efd;
-        }
-        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Sora', sans-serif;
+            background: #0f172a;
             min-height: 100vh;
-            padding: 20px 0;
+            display: flex; align-items: center; justify-content: center;
+            padding: 40px 20px;
         }
-        
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            max-width: 700px;
-            margin: 0 auto;
+        .form-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 50px 45px;
+            max-width: 620px; width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
-        
-        .form-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 15px;
+        h2 { color: #f1f5f9; font-weight: 800; font-size: 1.6rem; margin-bottom: 6px; }
+        .subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 35px; }
+        .section-title {
+            color: #94a3b8; font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            margin-bottom: 16px; margin-top: 28px;
+            display: flex; align-items: center; gap: 8px;
         }
-        
-        .form-section {
-            margin-bottom: 30px;
+        .section-title::after { content:''; flex:1; height:1px; background:#334155; }
+
+        label { color: #94a3b8; font-size: 0.85rem; font-weight: 600; margin-bottom: 7px; display: block; }
+        .form-control, textarea.form-control {
+            background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+            color: #f1f5f9; padding: 12px 16px;
+            font-family: 'Sora', sans-serif; font-size: 0.9rem; width: 100%;
+            transition: border-color 0.3s;
         }
-        
-        .form-section-title {
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #dee2e6;
+        .form-control:focus, textarea.form-control:focus {
+            outline: none; border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
-        
-        .form-group {
-            margin-bottom: 20px;
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        .form-group { margin-bottom: 18px; }
+
+        /* Answer rows */
+        .answer-row {
+            display: flex; align-items: center; gap: 12px;
+            background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+            padding: 12px 16px; margin-bottom: 12px;
+            transition: border-color 0.2s;
         }
-        
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
+        .answer-row:has(input[type="radio"]:checked) { border-color: #22c55e; background: rgba(34,197,94,0.04); }
+        .letter-badge {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.85rem; color: white; flex-shrink: 0;
         }
-        
-        .form-control, .form-select {
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
+        .ltr-a { background: #6366f1; }
+        .ltr-b { background: #8b5cf6; }
+        .ltr-c { background: #06b6d4; }
+        .ltr-d { background: #f59e0b; }
+        .answer-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: #e2e8f0; font-family: 'Sora', sans-serif; font-size: 0.9rem;
         }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        input[type="radio"] { accent-color: #22c55e; width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
+        .radio-label { color: #64748b; font-size: 0.78rem; white-space: nowrap; }
+
+        .btn-submit {
+            width: 100%; background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none; border-radius: 10px;
+            padding: 14px; font-size: 1rem; font-weight: 700;
+            font-family: 'Sora', sans-serif; cursor: pointer; transition: all 0.3s;
+            margin-bottom: 12px; margin-top: 10px;
         }
-        
-        textarea.form-control {
-            resize: vertical;
-            min-height: 100px;
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+        .btn-back {
+            width: 100%; background: transparent; border: 1px solid #334155; color: #64748b;
+            border-radius: 10px; padding: 12px; font-size: 0.9rem; font-weight: 600;
+            font-family: 'Sora', sans-serif; cursor: pointer; text-decoration: none;
+            display: block; text-align: center; transition: all 0.2s;
         }
-        
-        .answer-group {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            position: relative;
-            border-left: 4px solid #ddd;
-        }
-        
-        .answer-group.answer-a {
-            border-left-color: #0dcaf0;
-        }
-        
-        .answer-group.answer-b {
-            border-left-color: #6c757d;
-        }
-        
-        .answer-group.answer-c {
-            border-left-color: #ffc107;
-        }
-        
-        .answer-group.answer-d {
-            border-left-color: #fd7e14;
-        }
-        
-        .answer-letter {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
-            font-weight: 700;
-            color: white;
-            margin-right: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .answer-group.answer-a .answer-letter {
-            background-color: #0dcaf0;
-        }
-        
-        .answer-group.answer-b .answer-letter {
-            background-color: #6c757d;
-        }
-        
-        .answer-group.answer-c .answer-letter {
-            background-color: #ffc107;
-        }
-        
-        .answer-group.answer-d .answer-letter {
-            background-color: #fd7e14;
-        }
-        
-        .radio-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .form-check {
-            margin: 0;
-        }
-        
-        .form-check-input {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            margin-top: 3px;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            border-radius: 8px;
-            padding: 10px 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            flex: 1;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-        }
-        
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-        }
-        
-        .form-text {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        
-        .alert {
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+        .btn-back:hover { border-color: #6366f1; color: #6366f1; }
+        .hint { color: #475569; font-size: 0.78rem; margin-top: 5px; }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <!-- Titre du formulaire -->
-        <h2 class="form-title">
+    <div class="form-card">
+        <h2>
             <c:choose>
-                <c:when test="${not empty param.id}">
-                    ✏️ Modifier une question QCM
-                </c:when>
-                <c:otherwise>
-                    ➕ Ajouter une nouvelle question
-                </c:otherwise>
+                <c:when test="${not empty question}">✏️ Modifier la question</c:when>
+                <c:otherwise>➕ Nouvelle question QCM</c:otherwise>
             </c:choose>
         </h2>
+        <p class="subtitle">
+            <c:if test="${not empty question}">Question #${question.numQuest} — </c:if>
+            Renseignez la question et ses quatre réponses
+        </p>
 
-        <!-- Message d'erreur ou de succès -->
-        <c:if test="${not empty param.error}">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Erreur !</strong> ${param.error}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
+        <form method="POST" action="${pageContext.request.contextPath}/qcm">
+            <input type="hidden" name="action"
+                   value="${not empty question ? 'update' : 'create'}">
+            <c:if test="${not empty question}">
+                <input type="hidden" name="numQuest" value="${question.numQuest}">
+            </c:if>
 
-        <c:if test="${not empty param.success}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Succès !</strong> ${param.success}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-
-        <!-- Formulaire -->
-        <form method="POST" action="${pageContext.request.contextPath}/qcm" class="needs-validation" novalidate>
-            <input type="hidden" name="action" value="<c:choose><c:when test='${not empty param.id}'>update</c:when><c:otherwise>create</c:otherwise></c:choose>">
-            <!-- Section Question -->
-            <div class="form-section">
-                <div class="form-section-title">📝 Question</div>
-                
-                <div class="form-group">
-                    <label for="question" class="form-label required-field">
-                        Énoncé de la question
-                    </label>
-                    <textarea 
-                        class="form-control" 
-                        id="question" 
-                        name="question"
-                        placeholder="Entrez l'énoncé de la question..."
-                        required
-                    >${param.question}</textarea>
-                    <div class="form-text">
-                        Soyez clair et précis dans la formulation
-                    </div>
-                </div>
+            <div class="section-title">Énoncé</div>
+            <div class="form-group">
+                <label for="question">Question *</label>
+                <textarea class="form-control" id="question" name="question"
+                          placeholder="Entrez l'énoncé de la question..." required>${not empty question ? question.question : ''}</textarea>
             </div>
 
-            <!-- Section Réponses -->
-            <div class="form-section">
-                <div class="form-section-title">🎯 Réponses</div>
-                
-                <!-- Réponse A -->
-                <div class="answer-group answer-a">
-                    <div class="radio-wrapper">
-                        <span class="answer-letter">A</span>
-                        <div class="form-check">
-                            <input 
-                                class="form-check-input" 
-                                type="radio" 
-                                name="bonneRep" 
-                                id="rep_a" 
-                                value="1"
-                                <c:if test="${param.bonneRep == '1'}">checked</c:if>
-                            >
-                            <label class="form-check-label" for="rep_a">
-                                Ceci est la bonne réponse
-                            </label>
-                        </div>
-                    </div>
-                    <input 
-                        type="text" 
-                        class="form-control mt-2" 
-                        name="reponse1"
-                        placeholder="Réponse A"
-                        value="${param.reponse1}"
-                        required
-                    >
-                </div>
+            <div class="section-title">Réponses — cochez la bonne</div>
+            <div class="hint" style="margin-bottom:14px;">Cochez le bouton radio correspondant à la bonne réponse</div>
 
-                <!-- Réponse B -->
-                <div class="answer-group answer-b">
-                    <div class="radio-wrapper">
-                        <span class="answer-letter">B</span>
-                        <div class="form-check">
-                            <input 
-                                class="form-check-input" 
-                                type="radio" 
-                                name="bonneRep" 
-                                id="rep_b" 
-                                value="2"
-                                <c:if test="${param.bonneRep == '2'}">checked</c:if>
-                            >
-                            <label class="form-check-label" for="rep_b">
-                                Ceci est la bonne réponse
-                            </label>
-                        </div>
-                    </div>
-                    <input 
-                        type="text" 
-                        class="form-control mt-2" 
-                        name="reponse2"
-                        placeholder="Réponse B"
-                        value="${param.reponse2}"
-                        required
-                    >
-                </div>
-
-                <!-- Réponse C -->
-                <div class="answer-group answer-c">
-                    <div class="radio-wrapper">
-                        <span class="answer-letter">C</span>
-                        <div class="form-check">
-                            <input 
-                                class="form-check-input" 
-                                type="radio" 
-                                name="bonneRep" 
-                                id="rep_c" 
-                                value="3"
-                                <c:if test="${param.bonneRep == '3'}">checked</c:if>
-                            >
-                            <label class="form-check-label" for="rep_c">
-                                Ceci est la bonne réponse
-                            </label>
-                        </div>
-                    </div>
-                    <input 
-                        type="text" 
-                        class="form-control mt-2" 
-                        name="reponse3"
-                        placeholder="Réponse C"
-                        value="${param.reponse3}"
-                        required
-                    >
-                </div>
-
-                <!-- Réponse D -->
-                <div class="answer-group answer-d">
-                    <div class="radio-wrapper">
-                        <span class="answer-letter">D</span>
-                        <div class="form-check">
-                            <input 
-                                class="form-check-input" 
-                                type="radio" 
-                                name="bonneRep" 
-                                id="rep_d" 
-                                value="4"
-                                <c:if test="${param.bonneRep == '4'}">checked</c:if>
-                            >
-                            <label class="form-check-label" for="rep_d">
-                                Ceci est la bonne réponse
-                            </label>
-                        </div>
-                    </div>
-                    <input 
-                        type="text" 
-                        class="form-control mt-2" 
-                        name="reponse4"
-                        placeholder="Réponse D"
-                        value="${param.reponse4}"
-                        required
-                    >
-                </div>
-
-                <div class="form-text mt-2">
-                    ⚠️ Assurez-vous de sélectionner la bonne réponse
-                </div>
+            <div class="answer-row">
+                <span class="letter-badge ltr-a">A</span>
+                <input type="text" class="answer-input" name="reponse1"
+                       placeholder="Réponse A..."
+                       value="${not empty question ? question.reponse1 : ''}" required>
+                <input type="radio" name="bonneRep" value="1"
+                       ${(not empty question && question.bonneRep == 1) ? 'checked' : ''} required>
+                <span class="radio-label">Bonne</span>
             </div>
 
-            <!-- Boutons d'action -->
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">
-                    <c:choose>
-                        <c:when test="${not empty param.id}">
-                            💾 Enregistrer les modifications
-                        </c:when>
-                        <c:otherwise>
-                            ➕ Ajouter la question
-                        </c:otherwise>
-                    </c:choose>
-                </button>
-                <button type="reset" class="btn btn-secondary">
-                    🔄 Réinitialiser
-                </button>
+            <div class="answer-row">
+                <span class="letter-badge ltr-b">B</span>
+                <input type="text" class="answer-input" name="reponse2"
+                       placeholder="Réponse B..."
+                       value="${not empty question ? question.reponse2 : ''}" required>
+                <input type="radio" name="bonneRep" value="2"
+                       ${(not empty question && question.bonneRep == 2) ? 'checked' : ''}>
+                <span class="radio-label">Bonne</span>
             </div>
 
-            <!-- Retour -->
-            <div class="mt-3 text-center">
-                <a href="liste.jsp" class="btn btn-outline-secondary w-100">
-                    ← Retour à la liste
-                </a>
+            <div class="answer-row">
+                <span class="letter-badge ltr-c">C</span>
+                <input type="text" class="answer-input" name="reponse3"
+                       placeholder="Réponse C..."
+                       value="${not empty question ? question.reponse3 : ''}" required>
+                <input type="radio" name="bonneRep" value="3"
+                       ${(not empty question && question.bonneRep == 3) ? 'checked' : ''}>
+                <span class="radio-label">Bonne</span>
             </div>
+
+            <div class="answer-row">
+                <span class="letter-badge ltr-d">D</span>
+                <input type="text" class="answer-input" name="reponse4"
+                       placeholder="Réponse D..."
+                       value="${not empty question ? question.reponse4 : ''}" required>
+                <input type="radio" name="bonneRep" value="4"
+                       ${(not empty question && question.bonneRep == 4) ? 'checked' : ''}>
+                <span class="radio-label">Bonne</span>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                ${not empty question ? '💾 Enregistrer les modifications' : '➕ Ajouter la question'}
+            </button>
+            <a href="${pageContext.request.contextPath}/qcm" class="btn-back">← Retour à la liste</a>
         </form>
     </div>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Validation du formulaire -->
-    <script>
-        (() => {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
 </body>
 </html>

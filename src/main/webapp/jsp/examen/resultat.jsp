@@ -1,362 +1,209 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    Integer note = (Integer) session.getAttribute("note");
+    if (note == null) {
+        response.sendRedirect(request.getContextPath() + "/examen");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats de l'Examen</title>
-    <!-- Bootstrap 5 CDN -->
+    <title>Résultats de l'examen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 0;
-        }
-        
-        .results-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            padding: 50px;
+        body { font-family: 'Sora', sans-serif; background: #0f172a; min-height: 100vh; padding: 40px 20px; }
+        .results-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 24px;
+            padding: 50px 45px;
             max-width: 700px;
             margin: 0 auto;
-            text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
         }
-        
-        .score-display {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+        .score-big {
+            font-size: 5rem; font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1; margin-bottom: 5px;
         }
-        
-        .score-display.excellent {
-            color: var(--success-color);
-        }
-        
-        .score-display.good {
-            color: #0dcaf0;
-        }
-        
-        .score-display.poor {
-            color: var(--danger-color);
-        }
-        
-        .message-section {
-            margin: 30px 0;
-            padding: 30px;
-            border-radius: 15px;
-            background: #f8f9fa;
-        }
-        
-        .message-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .message-text {
-            font-size: 1.1rem;
-            color: #6c757d;
-            line-height: 1.6;
-        }
-        
-        .excellent-message {
-            background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(13, 202, 240, 0.1));
-            border: 2px solid var(--success-color);
-        }
-        
-        .excellent-message .message-title {
-            color: var(--success-color);
-        }
-        
-        .good-message {
-            background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(25, 135, 84, 0.1));
-            border: 2px solid #0dcaf0;
-        }
-        
-        .good-message .message-title {
-            color: #0dcaf0;
-        }
-        
-        .poor-message {
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(255, 193, 7, 0.1));
-            border: 2px solid var(--danger-color);
-        }
-        
-        .poor-message .message-title {
-            color: var(--danger-color);
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 30px 0;
-        }
-        
-        .stat-box {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            border: 2px solid #dee2e6;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-top: 8px;
-        }
-        
-        .stat-box.correct {
-            background: rgba(25, 135, 84, 0.05);
-            border-color: var(--success-color);
-        }
-        
-        .stat-box.correct .stat-number {
-            color: var(--success-color);
-        }
-        
-        .stat-box.incorrect {
-            background: rgba(220, 53, 69, 0.05);
-            border-color: var(--danger-color);
-        }
-        
-        .stat-box.incorrect .stat-number {
-            color: var(--danger-color);
-        }
-        
-        .results-detail {
-            text-align: left;
-            margin: 30px 0;
-        }
-        
-        .result-item {
-            padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #f8f9fa;
-        }
-        
-        .result-item.correct {
-            background: rgba(25, 135, 84, 0.1);
-            border-left: 4px solid var(--success-color);
-        }
-        
-        .result-item.incorrect {
-            background: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid var(--danger-color);
-        }
-        
-        .result-number {
+        .score-big.success { background: linear-gradient(135deg, #22c55e, #16a34a); -webkit-background-clip: text; }
+        .score-big.fail { background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; }
+        h1 { color: #f1f5f9; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; text-align: center; }
+        .status-badge {
             display: inline-block;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700; font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .status-badge.admis { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .status-badge.refuse { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+        .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 18px;
             text-align: center;
-            line-height: 35px;
-            font-weight: 700;
-            color: white;
-            background: var(--primary-color);
+        }
+        .stat-val { font-size: 1.8rem; font-weight: 800; }
+        .stat-val.ok { color: #22c55e; }
+        .stat-val.ko { color: #ef4444; }
+        .stat-val.neutral { color: #6366f1; }
+        .stat-lbl { color: #64748b; font-size: 0.8rem; margin-top: 5px; }
+
+        .detail-title { color: #94a3b8; font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .detail-item {
+            background: #0f172a;
+            border-left: 3px solid #334155;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex; align-items: flex-start; gap: 14px;
+        }
+        .detail-item.ok { border-left-color: #22c55e; }
+        .detail-item.ko { border-left-color: #ef4444; }
+        .detail-item.absent { border-left-color: #f59e0b; }
+        .num-badge {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.8rem;
             flex-shrink: 0;
         }
-        
-        .result-correct {
-            background: var(--success-color);
+        .num-badge.ok { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .num-badge.ko { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .num-badge.absent { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .detail-q { color: #cbd5e1; font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+        .detail-ans { font-size: 0.82rem; }
+        .detail-ans .given { color: #64748b; }
+        .detail-ans .correct { color: #22c55e; font-weight: 600; }
+        .detail-ans .wrong { color: #ef4444; }
+        .detail-ans .expected { color: #22c55e; }
+
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+        .btn-action {
+            flex: 1; min-width: 160px;
+            border-radius: 10px;
+            padding: 13px 20px;
+            font-weight: 700; font-size: 0.9rem;
+            font-family: 'Sora', sans-serif;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+            border: none; cursor: pointer;
         }
-        
-        .result-incorrect {
-            background: var(--danger-color);
+        .btn-primary-act {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
         }
-        
-        .result-text {
-            flex: 1;
+        .btn-primary-act:hover { transform: translateY(-2px); color: white; box-shadow: 0 8px 20px rgba(99,102,241,0.3); }
+        .btn-outline-act {
+            background: transparent;
+            border: 1px solid #334155;
+            color: #94a3b8;
         }
-        
-        .result-question {
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .result-answer {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            border-radius: 8px;
-            padding: 12px 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-2px);
-        }
-        
-        .medal {
-            font-size: 3rem;
-            margin-bottom: 10px;
+        .btn-outline-act:hover { border-color: #6366f1; color: #6366f1; }
+
+        .email-notice {
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 10px;
+            padding: 14px 18px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 25px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="results-container">
-        <%-- Simulation: Note de 7/10 --%>
-        <div class="medal">🎓</div>
-        <h1>Vos Résultats</h1>
-        
-        <!-- Affichage de la note -->
-        <div class="score-display excellent">7/10</div>
-        <p style="color: #6c757d; margin-bottom: 30px;">Pourcentage de réussite: <strong>70%</strong></p>
-        
-        <!-- Message de félicitation/encouragement -->
-        <div class="message-section excellent-message">
-            <div class="medal">🎉</div>
-            <div class="message-title">Bravo !</div>
-            <div class="message-text">
-                Vous avez obtenu une très bonne note ! Votre compréhension du sujet est confirmée.
-                Continuez ainsi pour renforcer vos connaissances.
+    <div class="results-card">
+        <div style="text-align:center; margin-bottom: 30px;">
+            <%
+                int noteVal = (Integer) session.getAttribute("note");
+                int nbBonnes = session.getAttribute("nbBonnes") != null ? (Integer) session.getAttribute("nbBonnes") : 0;
+                int total = session.getAttribute("totalQuestions") != null ? (Integer) session.getAttribute("totalQuestions") : 10;
+                boolean admis = noteVal >= 5;
+            %>
+            <div class="score-big <%= admis ? "success" : "fail" %>">
+                <%= noteVal %>/10
+            </div>
+            <h1>Résultats de votre examen</h1>
+            <div class="status-badge <%= admis ? "admis" : "refuse" %>">
+                <%= admis ? "✅ ADMIS" : "❌ NON ADMIS" %>
             </div>
         </div>
-        
-        <!-- Statistiques -->
-        <div class="stats-grid">
-            <div class="stat-box correct">
-                <div class="stat-number">7</div>
-                <div class="stat-label">Bonnes réponses</div>
-            </div>
-            <div class="stat-box incorrect">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Mauvaises réponses</div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-val ok"><%= nbBonnes %></div>
+                <div class="stat-lbl">Bonnes réponses</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number">14m 32s</div>
-                <div class="stat-label">Temps utilisé</div>
+                <div class="stat-val ko"><%= total - nbBonnes %></div>
+                <div class="stat-lbl">Mauvaises / Absentes</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val neutral"><%= Math.round(noteVal * 10.0) %>%</div>
+                <div class="stat-lbl">Pourcentage</div>
             </div>
         </div>
-        
-        <!-- Détail des résultats -->
-        <div class="results-detail">
-            <h5 class="mb-3">📋 Récapitulatif détaillé</h5>
-            
-            <!-- Question 1 -->
-            <div class="result-item correct">
-                <span class="result-number result-correct">1</span>
-                <div class="result-text">
-                    <div class="result-question">Quel est le port par défaut d'Apache ?</div>
-                    <div class="result-answer">✓ Votre réponse: <strong>Port 80 (HTTP)</strong> - Correcte</div>
-                </div>
-            </div>
-            
-            <!-- Question 2 -->
-            <div class="result-item incorrect">
-                <span class="result-number result-incorrect">2</span>
-                <div class="result-text">
-                    <div class="result-question">Qu'est-ce que JSP signifie ?</div>
-                    <div class="result-answer">✗ Votre réponse: JavaScript Protocol | Bonne réponse: <strong>Java Server Pages</strong></div>
-                </div>
-            </div>
-            
-            <!-- Question 3 -->
-            <div class="result-item correct">
-                <span class="result-number result-correct">3</span>
-                <div class="result-text">
-                    <div class="result-question">Définition de JSTL</div>
-                    <div class="result-answer">✓ Votre réponse: <strong>JavaServer Pages Standard Tag Library</strong> - Correcte</div>
-                </div>
-            </div>
-            
-            <!-- Question 4 -->
-            <div class="result-item incorrect">
-                <span class="result-number result-incorrect">4</span>
-                <div class="result-text">
-                    <div class="result-question">Port MySQL par défaut</div>
-                    <div class="result-answer">✗ Votre réponse: 3305 | Bonne réponse: <strong>3306</strong></div>
-                </div>
-            </div>
-            
-            <!-- Question 5 -->
-            <div class="result-item correct">
-                <span class="result-number result-correct">5</span>
-                <div class="result-text">
-                    <div class="result-question">Qu'est-ce que Bootstrap ?</div>
-                    <div class="result-answer">✓ Votre réponse: <strong>Framework CSS responsive</strong> - Correcte</div>
-                </div>
-            </div>
-            
-            <!-- Questions supplémentaires -->
-            <c:forEach var="i" begin="6" end="10">
-                <c:choose>
-                    <c:when test="${i % 2 == 0}">
-                        <div class="result-item correct">
-                            <span class="result-number result-correct">${i}</span>
-                            <div class="result-text">
-                                <div class="result-question">Question ${i}</div>
-                                <div class="result-answer">✓ Réponse correcte</div>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="result-item incorrect">
-                            <span class="result-number result-incorrect">${i}</span>
-                            <div class="result-text">
-                                <div class="result-question">Question ${i}</div>
-                                <div class="result-answer">✗ Réponse incorrecte</div>
-                            </div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+
+        <div class="email-notice">
+            📧 Un récapitulatif de vos résultats a été envoyé à votre adresse email.
         </div>
-        
-        <!-- Boutons d'action -->
-        <div class="button-group">
-            <a href="passage.jsp" class="btn btn-primary">
+
+        <!-- Détail des réponses -->
+        <div class="detail-title">📋 Détail des réponses</div>
+        <%
+            String[][] details = (String[][]) session.getAttribute("details");
+            if (details != null) {
+                for (int i = 0; i < details.length; i++) {
+                    String statut = details[i][2]; // "correct", "incorrect", "absent"
+                    String cssClass = "correct".equals(statut) ? "ok" : ("absent".equals(statut) ? "absent" : "ko");
+                    String icon = "correct".equals(statut) ? "✓" : ("absent".equals(statut) ? "?" : "✗");
+        %>
+        <div class="detail-item <%= cssClass %>">
+            <div class="num-badge <%= cssClass %>"><%= icon %></div>
+            <div style="flex:1">
+                <div class="detail-q"><%= (i+1) %>. <%= details[i][0] != null ? details[i][0] : "" %></div>
+                <div class="detail-ans">
+                    <%if ("correct".equals(statut)) {%>
+                        <span class="correct">✓ <%= details[i][1] %></span>
+                    <%} else if ("absent".equals(statut)) {%>
+                        <span class="given">Sans réponse</span>
+                        <span class="expected"> — Bonne : <%= details[i][3] %></span>
+                    <%} else {%>
+                        <span class="wrong">✗ Votre réponse : <%= details[i][1] %></span>
+                        <span class="expected"> — Bonne : <%= details[i][3] %></span>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+        <%
+                }
+            }
+        %>
+
+        <div class="actions">
+            <a href="${pageContext.request.contextPath}/examen?action=start" class="btn-action btn-primary-act">
                 🔄 Repasser l'examen
             </a>
-            <a href="classement.jsp" class="btn btn-outline-primary">
-                📊 Voir le classement
+            <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn-action btn-outline-act">
+                🏆 Classement
             </a>
-            <a href="../../index.jsp" class="btn btn-outline-secondary">
-                🏠 Retour à l'accueil
+            <a href="${pageContext.request.contextPath}/" class="btn-action btn-outline-act">
+                🏠 Accueil
             </a>
         </div>
     </div>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

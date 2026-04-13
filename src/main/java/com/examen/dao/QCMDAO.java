@@ -10,49 +10,51 @@ import java.util.List;
  * DAO pour la gestion des questions QCM
  */
 public class QCMDAO {
-    
+
     private Connection connection;
-    
+
     public QCMDAO() {
         this.connection = DBConnexion.getInstance().getConnection();
     }
-    
+
     /**
      * Crée une nouvelle question QCM
-     * @param qcm la question à créer
-     * @return true si création réussie, false sinon
+     * NB : num_quest est AUTO_INCREMENT, on ne l'insère pas
      */
     public boolean create(QCM qcm) {
-        String sql = "INSERT INTO QCM (num_quest, question, reponse1, reponse2, reponse3, reponse4, bonne_rep) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, qcm.getNumQuest());
-            pstmt.setString(2, qcm.getQuestion());
-            pstmt.setString(3, qcm.getReponse1());
-            pstmt.setString(4, qcm.getReponse2());
-            pstmt.setString(5, qcm.getReponse3());
-            pstmt.setString(6, qcm.getReponse4());
-            pstmt.setInt(7, qcm.getBonneRep());
-            
-            return pstmt.executeUpdate() > 0;
+        String sql = "INSERT INTO QCM (question, reponse1, reponse2, reponse3, reponse4, bonne_rep) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, qcm.getQuestion());
+            pstmt.setString(2, qcm.getReponse1());
+            pstmt.setString(3, qcm.getReponse2());
+            pstmt.setString(4, qcm.getReponse3());
+            pstmt.setString(5, qcm.getReponse4());
+            pstmt.setInt(6, qcm.getBonneRep());
+
+            int affected = pstmt.executeUpdate();
+            if (affected > 0) {
+                ResultSet keys = pstmt.getGeneratedKeys();
+                if (keys.next()) qcm.setNumQuest(keys.getInt(1));
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
             System.err.println("Erreur lors de la création de la question : " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Récupère toutes les questions QCM
-     * @return liste de toutes les questions
      */
     public List<QCM> findAll() {
         List<QCM> questions = new ArrayList<>();
         String sql = "SELECT * FROM QCM ORDER BY num_quest";
-        
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
             while (rs.next()) {
                 questions.add(extractQCMFromResultSet(rs));
             }
@@ -61,16 +63,29 @@ public class QCMDAO {
         }
         return questions;
     }
-    
+
+    /**
+     * Trouve une question par son ID
+     */
+    public QCM findById(int numQuest) {
+        String sql = "SELECT * FROM QCM WHERE num_quest = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, numQuest);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) return extractQCMFromResultSet(rs);
+        } catch (SQLException e) {
+            System.err.println("Erreur findById QCM : " + e.getMessage());
+        }
+        return null;
+    }
+
     /**
      * Met à jour une question QCM
-     * @param qcm question avec les nouvelles informations
-     * @return true si mise à jour réussie, false sinon
      */
     public boolean update(QCM qcm) {
         String sql = "UPDATE QCM SET question = ?, reponse1 = ?, reponse2 = ?, " +
                      "reponse3 = ?, reponse4 = ?, bonne_rep = ? WHERE num_quest = ?";
-        
+
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, qcm.getQuestion());
             pstmt.setString(2, qcm.getReponse1());
@@ -79,22 +94,19 @@ public class QCMDAO {
             pstmt.setString(5, qcm.getReponse4());
             pstmt.setInt(6, qcm.getBonneRep());
             pstmt.setInt(7, qcm.getNumQuest());
-            
+
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Erreur lors de la mise à jour de la question : " + e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Supprime une question QCM
-     * @param numQuest numéro de la question à supprimer
-     * @return true si suppression réussie, false sinon
      */
     public boolean delete(int numQuest) {
         String sql = "DELETE FROM QCM WHERE num_quest = ?";
-        
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, numQuest);
             return pstmt.executeUpdate() > 0;
@@ -103,18 +115,16 @@ public class QCMDAO {
             return false;
         }
     }
-    
+
     /**
      * Récupère 10 questions aléatoires pour un examen
-     * @return liste de 10 questions aléatoires
      */
     public List<QCM> get10Random() {
         List<QCM> questions = new ArrayList<>();
         String sql = "SELECT * FROM QCM ORDER BY RAND() LIMIT 10";
-        
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
             while (rs.next()) {
                 questions.add(extractQCMFromResultSet(rs));
             }
@@ -123,10 +133,21 @@ public class QCMDAO {
         }
         return questions;
     }
-    
+
     /**
-     * Extrait un objet QCM d'un ResultSet
+     * Compte le nombre total de questions
      */
+    public int count() {
+        String sql = "SELECT COUNT(*) FROM QCM";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("Erreur count QCM : " + e.getMessage());
+        }
+        return 0;
+    }
+
     private QCM extractQCMFromResultSet(ResultSet rs) throws SQLException {
         QCM qcm = new QCM();
         qcm.setNumQuest(rs.getInt("num_quest"));

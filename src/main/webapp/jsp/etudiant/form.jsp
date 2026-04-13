@@ -5,292 +5,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire Étudiant</title>
-    <!-- Bootstrap 5 CDN -->
+    <title><c:choose><c:when test="${editMode}">Modifier</c:when><c:otherwise>Ajouter</c:otherwise></c:choose> un étudiant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0d6efd;
-        }
-        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Sora', sans-serif;
+            background: #0f172a;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 20px 0;
+            display: flex; align-items: center; justify-content: center;
+            padding: 40px 20px;
         }
-        
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            max-width: 600px;
-            margin: 0 auto;
+        .form-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 50px 45px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         }
-        
-        .form-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 15px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        
+        h2 { color: #f1f5f9; font-weight: 800; font-size: 1.6rem; margin-bottom: 6px; }
+        .subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 35px; }
+        label { color: #94a3b8; font-size: 0.88rem; font-weight: 600; margin-bottom: 7px; display: block; }
         .form-control, .form-select {
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: #f1f5f9;
+            padding: 12px 16px;
+            font-family: 'Sora', sans-serif;
+            font-size: 0.92rem;
+            transition: border-color 0.3s;
+            width: 100%;
         }
-        
         .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+            outline: none;
+            background: #0f172a;
+            border-color: #6366f1;
+            color: #f1f5f9;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
         }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
+        .form-select option { background: #1e293b; color: #f1f5f9; }
+        .form-group { margin-bottom: 22px; }
+        .hint { color: #475569; font-size: 0.78rem; margin-top: 5px; }
+        .readonly-field { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white; border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 1rem; font-weight: 700;
+            font-family: 'Sora', sans-serif;
+            cursor: pointer; transition: all 0.3s;
+            margin-bottom: 12px;
         }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(99,102,241,0.4); }
+        .btn-back {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #334155;
+            color: #64748b;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.9rem; font-weight: 600;
+            font-family: 'Sora', sans-serif;
+            cursor: pointer; transition: all 0.2s;
+            text-decoration: none; display: block; text-align: center;
         }
-        
-        .btn {
-            border-radius: 8px;
-            padding: 10px 30px;
-            font-weight: 600;
-            transition: all 0.3s;
-            flex: 1;
+        .btn-back:hover { border-color: #6366f1; color: #6366f1; }
+        .alert-err {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 10px;
+            color: #fca5a5;
+            padding: 12px 16px;
+            margin-bottom: 22px;
+            font-size: 0.88rem;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            border: none;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-        }
-        
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-        }
-        
-        .form-text {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        
-        .alert {
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .alert-ok {
+            background: rgba(34,197,94,0.1);
+            border: 1px solid rgba(34,197,94,0.3);
+            border-radius: 10px;
+            color: #86efac;
+            padding: 12px 16px;
+            margin-bottom: 22px;
+            font-size: 0.88rem;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <!-- Titre du formulaire -->
-        <h2 class="form-title">
+    <div class="form-card">
+        <h2>
             <c:choose>
-                <c:when test="${not empty param.id}">
-                    ✏️ Modifier un étudiant
-                </c:when>
-                <c:otherwise>
-                    ➕ Ajouter un nouvel étudiant
-                </c:otherwise>
+                <c:when test="${editMode}">✏️ Modifier l'étudiant</c:when>
+                <c:otherwise>➕ Nouvel étudiant</c:otherwise>
             </c:choose>
         </h2>
+        <p class="subtitle">
+            <c:choose>
+                <c:when test="${editMode}">Modifiez les informations de l'étudiant</c:when>
+                <c:otherwise>Renseignez les informations du nouvel étudiant</c:otherwise>
+            </c:choose>
+        </p>
 
-        <!-- Message d'erreur ou de succès -->
         <c:if test="${not empty param.error}">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Erreur !</strong> ${param.error}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert-err">
+                <c:choose>
+                    <c:when test="${param.error == 'createFailed'}">❌ Erreur : l'email existe peut-être déjà, ou le numéro étudiant est invalide.</c:when>
+                    <c:otherwise>❌ Une erreur est survenue.</c:otherwise>
+                </c:choose>
             </div>
         </c:if>
 
-        <c:if test="${not empty param.success}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>Succès !</strong> ${param.success}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
+        <form method="POST" action="${pageContext.request.contextPath}/etudiant">
+            <input type="hidden" name="action" value="${editMode ? 'update' : 'create'}">
 
-        <!-- Formulaire -->
-        <form method="POST" action="${pageContext.request.contextPath}/etudiant" class="needs-validation" novalidate>
-            <input type="hidden" name="action" value="<c:choose><c:when test='${not empty param.id}'>update</c:when><c:otherwise>create</c:otherwise></c:choose>">
-            <!-- Champ: Numéro d'étudiant -->
             <div class="form-group">
-                <label for="numEtudiant" class="form-label required-field">
-                    Numéro d'étudiant
-                </label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="numEtudiant" 
-                    name="numEtudiant"
-                    placeholder="Ex: E001234"
-                    value="${param.numEtudiant}"
-                    required
-                    <c:if test="${not empty param.id}">readonly</c:if>
-                >
-                <div class="form-text">
-                    Identifiant unique de l'étudiant (format: E + 6 chiffres)
-                </div>
+                <label for="numEtudiant">Numéro étudiant *</label>
+                <input type="text" class="form-control ${editMode ? 'readonly-field' : ''}"
+                       id="numEtudiant" name="numEtudiant"
+                       placeholder="Ex: E001001"
+                       value="${editMode ? etudiant.numEtudiant : ''}"
+                       ${editMode ? 'readonly' : ''} required>
+                <div class="hint">Format recommandé : E + 6 chiffres</div>
             </div>
 
-            <!-- Champ: Nom -->
             <div class="form-group">
-                <label for="nom" class="form-label required-field">
-                    Nom
-                </label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="nom" 
-                    name="nom"
-                    placeholder="Ex: Dupont"
-                    value="${param.nom}"
-                    required
-                >
+                <label for="nom">Nom *</label>
+                <input type="text" class="form-control" id="nom" name="nom"
+                       placeholder="Ex: Dupont"
+                       value="${editMode ? etudiant.nom : ''}" required>
             </div>
 
-            <!-- Champ: Prénoms -->
             <div class="form-group">
-                <label for="prenoms" class="form-label required-field">
-                    Prénoms
-                </label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="prenoms" 
-                    name="prenoms"
-                    placeholder="Ex: Jean Marie"
-                    value="${param.prenoms}"
-                    required
-                >
+                <label for="prenoms">Prénoms *</label>
+                <input type="text" class="form-control" id="prenoms" name="prenoms"
+                       placeholder="Ex: Jean Marie"
+                       value="${editMode ? etudiant.prenoms : ''}" required>
             </div>
 
-            <!-- Champ: Email -->
             <div class="form-group">
-                <label for="email" class="form-label required-field">
-                    Adresse email
-                </label>
-                <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
-                    name="email"
-                    placeholder="Ex: jean.dupont@exemple.fr"
-                    value="${param.email}"
-                    required
-                >
-                <div class="form-text">
-                    L'email doit être valide et unique
-                </div>
+                <label for="email">Email *</label>
+                <input type="email" class="form-control" id="email" name="email"
+                       placeholder="Ex: jean.dupont@example.com"
+                       value="${editMode ? etudiant.adrEmail : ''}" required>
+                <div class="hint">Doit être unique dans le système</div>
             </div>
 
-            <!-- Champ: Niveau -->
             <div class="form-group">
-                <label for="niveau" class="form-label required-field">
-                    Niveau d'études
-                </label>
+                <label for="niveau">Niveau *</label>
                 <select class="form-select" id="niveau" name="niveau" required>
-                    <option value="">-- Sélectionnez un niveau --</option>
-                    <option value="L1" <c:if test="${param.niveau == 'L1'}">selected</c:if>>
-                        Licence 1ère année (L1)
-                    </option>
-                    <option value="L2" <c:if test="${param.niveau == 'L2'}">selected</c:if>>
-                        Licence 2ème année (L2)
-                    </option>
-                    <option value="L3" <c:if test="${param.niveau == 'L3'}">selected</c:if>>
-                        Licence 3ème année (L3)
-                    </option>
-                    <option value="M1" <c:if test="${param.niveau == 'M1'}">selected</c:if>>
-                        Master 1ère année (M1)
-                    </option>
-                    <option value="M2" <c:if test="${param.niveau == 'M2'}">selected</c:if>>
-                        Master 2ème année (M2)
-                    </option>
+                    <option value="">— Sélectionnez —</option>
+                    <c:forEach var="niv" items="${['L1','L2','L3','M1','M2']}">
+                        <option value="${niv}"
+                            ${(editMode && etudiant.niveau == niv) ? 'selected' : ''}>
+                            ${niv}
+                        </option>
+                    </c:forEach>
                 </select>
             </div>
 
-            <!-- Boutons d'action -->
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">
-                    <c:choose>
-                        <c:when test="${not empty param.id}">
-                            💾 Enregistrer les modifications
-                        </c:when>
-                        <c:otherwise>
-                            ➕ Ajouter l'étudiant
-                        </c:otherwise>
-                    </c:choose>
-                </button>
-                <button type="reset" class="btn btn-secondary">
-                    🔄 Annuler
-                </button>
-            </div>
-
-            <!-- Retour -->
-            <div class="mt-3 text-center">
-                <a href="liste.jsp" class="btn btn-outline-secondary w-100">
-                    ← Retour à la liste
-                </a>
-            </div>
+            <button type="submit" class="btn-submit">
+                ${editMode ? '💾 Enregistrer les modifications' : '➕ Ajouter l\'étudiant'}
+            </button>
+            <a href="${pageContext.request.contextPath}/etudiant" class="btn-back">← Retour à la liste</a>
         </form>
     </div>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Validation du formulaire -->
-    <script>
-        (() => {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
 </body>
 </html>
