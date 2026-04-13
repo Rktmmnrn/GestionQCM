@@ -1,32 +1,32 @@
 # Gestion Examens
 
-Application web JSP/Servlet pour la gestion d'examens et de QCM.
+Application web JSP/Servlet pour la gestion d'examens, QCM et étudiants.
 
 ## 📋 Vue d'ensemble
 
 Cette application permet de gérer :
 - **Étudiants** : création, modification, suppression et recherche
-- **Examens** : suivi des passages et résultats
-- **QCM** : gestion de questionnaires à choix multiples with passages et classements
+- **Examens** : inscription, passage et affichage des résultats
+- **QCM** : création et gestion des questionnaires à choix multiples
 
-## 🏗️ Architecture
+## 🏗️ Structure du projet
 
 ```
 src/main/
 ├── java/
 │   └── com/examen/
 │       ├── dao/              # Accès aux données (DAO)
-│       ├── modele/           # Modèles métier (Entités)
+│       ├── model/            # Modèles métier (Entités)
 │       ├── servlet/          # Contrôleurs (Servlets)
 │       └── util/             # Utilitaires (Connexion, Email)
 ├── resources/
-│   └── config.properties     # Configuration SMTP
+│   └── config.properties     # Configuration email
 └── webapp/
     ├── index.jsp             # Page d'accueil
-    ├── diagnostic.jsp        # Test connexion BD
+    ├── diagnostic.jsp        # Test de connexion à la BD
     ├── css/                  # Feuilles de style
     ├── js/                   # Scripts JavaScript
-    ├── jsp/                  # Pages JSP (Vues) ✅ ACTUEL
+    ├── jsp/                  # Pages JSP d'interface
     │   ├── etudiant/
     │   ├── examen/
     │   └── qcm/
@@ -34,78 +34,55 @@ src/main/
         └── web.xml
 ```
 
-### ⚠️ Nettoyage des doublons (Structure ancienne)
+> Les pages JSP sont servies depuis `/jsp/...`. Il n'y a pas de structure active sous `WEB-INF/views/`.
 
-**Fichiers à SUPPRIMER** - restes de structure ancienne non utilisée :
+## 🚀 Prérequis
 
-```
-❌ INUTILISÉS :
-src/main/webapp/WEB-INF/views/examen/
-    ├── inscription.jsp
-    ├── passage.jsp
-    └── resultat.jsp
-```
-
-**Pour nettoyer :**
-
-```bash
-# Automatique
-bash cleanup.sh
-
-# Manuel
-rm -rf src/main/webapp/WEB-INF/views/
-```
-
-Tous les servlets pointent vers `/jsp/examen/`, pas vers `/WEB-INF/views/examen/`
-
-## � Démarrage
-
-### Prérequis
 - Java 11+
 - Maven 3.6+
-- Base de données MySQL/MariaDB
+- MySQL ou MariaDB
 - Tomcat 10+
 
-### Installation
+## ⚙️ Installation
 
-#### 1. Initialiser la base de données
-
-Exécutez le script d'initialisation pour créer la BD et les tables :
+### 1. Initialiser la base de données
 
 ```bash
-# Sur Linux/Mac
 chmod +x init_db.sh
 ./init_db.sh
+```
 
-# Sur Windows (avec MySQL client)
+Ou via MySQL :
+
+```bash
 mysql -h localhost -u fenohery -padmin < init_db.sql
 ```
 
-Ou manuellement via phpMyAdmin/MySQL Workbench en exécutant le fichier `init_db.sql`
-
-#### 2. Compiler et déployer
+### 2. Compiler le projet
 
 ```bash
-# Compilation
 mvn clean package
+```
 
-# Déploiement automatique
+### 3. Déployer
+
+```bash
 ./dev.sh
 ```
 
-#### 3. Accéder à l'application
+### 4. Accéder à l'application
 
-- **Accueil** : http://localhost:8080/GestionExamens/
-- **Diagnostic** : http://localhost:8080/GestionExamens/diagnostic.jsp (teste la connexion BD)
-- **Gestion des étudiants** : http://localhost:8080/GestionExamens/etudiant
-- **Gestion des QCM** : http://localhost:8080/GestionExamens/qcm
-- **Passages d'examens** : http://localhost:8080/GestionExamens/examen
+- Accueil : `http://localhost:8080/GestionExamens/`
+- Diagnostic : `http://localhost:8080/GestionExamens/diagnostic.jsp`
+- Étudiants : `http://localhost:8080/GestionExamens/etudiant`
+- QCM : `http://localhost:8080/GestionExamens/qcm`
+- Examens : `http://localhost:8080/GestionExamens/examen`
 
-## ⚙️ Configuration
+## 🔧 Configuration
 
 ### Base de données
 
-**Fichier** : `src/main/java/com/examen/util/DBConnexion.java`
+Dans `src/main/java/com/examen/util/DBConnexion.java` :
 
 ```java
 private static final String URL = "jdbc:mysql://localhost:3306/gestion_qcm";
@@ -113,11 +90,11 @@ private static final String USER = "fenohery";
 private static final String PASSWORD = "admin";
 ```
 
-À adapter selon votre environnement MySQL.
+Adaptez ces valeurs à votre environnement.
 
-### Email (Facultatif)
+### Email (optionnel)
 
-**Fichier** : `src/main/resources/config.properties`
+Dans `src/main/resources/config.properties` :
 
 ```properties
 mail.smtp.host=smtp.gmail.com
@@ -127,71 +104,47 @@ mail.password=votre_mot_de_passe_appli
 mail.from=votre_email@gmail.com
 ```
 
-Nécessaire pour envoyer les récapitulatifs de notes par email.
-
-## 🔗 Endpoints
+## 🔗 Points d'accès principaux
 
 ### Étudiants
-- `GET /etudiant` - Liste tous les étudiants (→ `/jsp/etudiant/liste.jsp`)
-- `GET /etudiant?action=new` - Formulaire d'ajout (→ `/jsp/etudiant/form.jsp`)
-- `GET /etudiant?action=edit&id=X` - Édition (→ `/jsp/etudiant/form.jsp`)
-- `GET /etudiant?action=delete&id=X` - Suppression (→ servlet)
-- `GET /etudiant?action=search` - Recherche (→ `/jsp/etudiant/liste.jsp`)
-- `POST /etudiant` - Créer/modifier (créé en BD, redirection)
+- `GET /etudiant`
+- `GET /etudiant?action=new`
+- `GET /etudiant?action=edit&id=X`
+- `GET /etudiant?action=delete&id=X`
+- `GET /etudiant?action=search`
+- `POST /etudiant`
 
 ### Examens
-- `GET /examen` - Accueil (→ `/jsp/examen/accueil.jsp`)
-- `GET /examen?action=start` - Inscription (→ `/jsp/examen/inscription.jsp`)
-- `GET /examen?action=passage` - Passage de l'examen (→ `/jsp/examen/passage.jsp`)
-- `GET /examen?action=resultat` - Résultats (→ `/jsp/examen/resultat.jsp`)
-- `POST /examen` - Démarrer/corriger examen (en session)
+- `GET /examen`
+- `GET /examen?action=start`
+- `GET /examen?action=passage`
+- `GET /examen?action=resultat`
+- `POST /examen`
 
 ### QCM
-- `GET /qcm` - Liste les questions (→ `/jsp/qcm/liste.jsp`)
-- `GET /qcm?action=new` - Formulaire création (→ `/jsp/qcm/form.jsp`)
-- `GET /qcm?action=edit&id=X` - Édition (→ `/jsp/qcm/form.jsp`)
-- `POST /qcm` - Créer/modifier question (créée en BD, redirection)
+- `GET /qcm`
+- `GET /qcm?action=new`
+- `GET /qcm?action=edit&id=X`
+- `POST /qcm`
 
-## 🐛 Troubleshooting
+## 🐞 Résolution de problèmes
 
-### Erreur 404 - Page non trouvée
-- Vérifiez que l'application est bien déployée : http://localhost:8080/GestionExamens/
-- Utilisez la page de diagnostic pour tester
-- Vérifiez les logs Tomcat
+### Vérification de syntaxe
+- Aucune erreur de syntaxe Java détectée dans l’analyse des fichiers.
+- La compilation est bloquée par une erreur de copie de ressources (`config.properties`) liée aux permissions du système de fichiers.
 
-### Erreur 500 - Erreur serveur
-- Consultez les logs Tomcat : `tail -f /opt/tomcat/logs/catalina.out`
-- Vérifiez la connexion à la base de données via `/diagnostic.jsp`
+### Erreur Maven sur `resources`
+- Vérifiez les permissions du dossier `target/`
+- Supprimez `target/` si nécessaire et relancez `mvn clean package`
+- Assurez-vous d’avoir les droits d’écriture dans le répertoire du projet
 
-### Aucun étudiant n'apparaît
-1. Vérifiez via le diagnostic: http://localhost:8080/GestionExamens/diagnostic.jsp
-2. Si la table est vide, initialisez la BD : `bash init_db.sh`
-3. Vérifiez les paramètres de connexion dans `DBConnexion.java`
-4. Consultez les erreurs MySQL dans les logs
+### Erreur 404
+- Vérifiez que l’application est déployée sur Tomcat
+- Utilisez `diagnostic.jsp`
 
-### Impossible d'ajouter un étudiant
-- Vérifiez que la table `ETUDIANT` existe (majuscule)
-- Vérifiez que l'email n'existe pas déjà (contrainte UNIQUE)
-- Consultez les logs Tomcat pour l'erreur SQL
-- Vérifiez les permissions de l'utilisateur MySQL (`fenohery`)
-
-### Problèmes de classe non trouvée
-```bash
-mvn clean compile
-mvn package
-```
-
-### Rebuild complet
-```bash
-mvn clean install
-./dev.sh
-```
-
-### Base de données
-- Vérifier les tables: `mysql -h localhost -u fenohery -padmin -e "USE gestion_qcm; SHOW TABLES;"`
-- Afficher les étudiants: `mysql -h localhost -u fenohery -padmin -e "USE gestion_qcm; SELECT * FROM ETUDIANT;"`
-- Réinitialiser complètement: `bash init_db.sh`
-- Supprimer les anciens fichiers: `rm -rf src/main/webapp/WEB-INF/views/`
+### Erreur 500
+- Consultez les logs Tomcat
+- Vérifiez la configuration de la base de données
 
 ## 📝 Licence
 
