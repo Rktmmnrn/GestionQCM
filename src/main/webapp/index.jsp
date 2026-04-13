@@ -129,10 +129,10 @@
                         <a class="nav-link active" href="index.jsp">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="jsp/etudiant/liste.jsp">Étudiants</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/etudiant">Étudiants</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="jsp/qcm/liste.jsp">Questions QCM</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/qcm">Questions QCM</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="jsp/examen/classement.jsp">Classement</a>
@@ -162,10 +162,10 @@
                         et les coordonnées de contact.
                     </p>
                     <div class="mt-4">
-                        <a href="jsp/etudiant/liste.jsp" class="btn btn-primary btn-card me-2">
+                        <a href="${pageContext.request.contextPath}/etudiant" class="btn btn-primary btn-card me-2">
                             Consulter
                         </a>
-                        <a href="jsp/etudiant/form.jsp" class="btn btn-outline-primary btn-card">
+                        <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-outline-primary btn-card">
                             Ajouter
                         </a>
                     </div>
@@ -182,10 +182,10 @@
                         et les bonnes réponses.
                     </p>
                     <div class="mt-4">
-                        <a href="jsp/qcm/liste.jsp" class="btn btn-primary btn-card me-2">
+                        <a href="${pageContext.request.contextPath}/qcm" class="btn btn-primary btn-card me-2">
                             Consulter
                         </a>
-                        <a href="jsp/qcm/form.jsp" class="btn btn-outline-primary btn-card">
+                        <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-outline-primary btn-card">
                             Ajouter
                         </a>
                     </div>
