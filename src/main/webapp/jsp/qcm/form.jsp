@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${not empty question ? 'Modifier' : 'Ajouter'} question — GestionExamens</title>
+    <title>${not empty question ? 'Modifier' : 'Ajouter'} question — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
         .ans-row {

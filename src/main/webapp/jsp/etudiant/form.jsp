@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${editMode ? 'Modifier' : 'Ajouter'} étudiant — GestionExamens</title>
+    <title>${editMode ? 'Modifier' : 'Ajouter'} étudiant — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
 </head>
 <body>

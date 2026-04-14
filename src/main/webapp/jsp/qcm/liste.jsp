@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questions QCM — GestionExamens</title>
+    <title>Questions QCM — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
         .qcm-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: box-shadow 0.15s; }

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classement — GestionExamens</title>
+    <title>Classement — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
         .podium { display: flex; align-items: flex-end; gap: 16px; justify-content: center; padding: 24px 20px; }

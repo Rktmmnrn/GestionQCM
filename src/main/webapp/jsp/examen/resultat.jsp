@@ -15,7 +15,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats — GestionExamens</title>
+    <title>Résultats — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
         .score-hero { text-align:center; padding: 30px 20px 20px; border-bottom: 1px solid var(--border); }

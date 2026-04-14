@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TOMCAT_HOME="/opt/tomcat"
-PROJECT_NAME="GestionExamens"
+PROJECT_NAME="GestionQuestionnaire"
 
 echo "🔧 Mode développement..."
 

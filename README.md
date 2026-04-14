@@ -47,11 +47,6 @@ src/main/
 
 ### 1. Initialiser la base de données
 
-```bash
-chmod +x init_db.sh
-./init_db.sh
-```
-
 Ou via MySQL :
 
 ```bash

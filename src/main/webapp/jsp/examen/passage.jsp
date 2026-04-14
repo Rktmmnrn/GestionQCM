@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen en cours — GestionExamens</title>
+    <title>Examen en cours — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
         /* Exam-specific styles — sidebar hidden during exam */
