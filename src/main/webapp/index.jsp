@@ -30,6 +30,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    if (sidebar.classList.contains('open')) {
+                        document.body.classList.add('sidebar-open');
+                    } else {
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+                // Fermer le sidebar en cliquant en dehors
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
+                        sidebar.classList.remove('open');
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 <body>
 <div class="app-shell">
@@ -37,6 +60,7 @@
 
     <div class="main-content">
         <div class="topbar">
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
             <div class="topbar-title">
                 🏠 <span class="topbar-breadcrumb">Tableau de bord</span>
             </div>

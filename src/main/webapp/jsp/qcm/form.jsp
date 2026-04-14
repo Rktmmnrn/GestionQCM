@@ -30,6 +30,7 @@
 
     <div class="main-content">
         <div class="topbar">
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
             <div class="topbar-title">
                 ❓ QCM <span class="topbar-breadcrumb">/ ${not empty question ? 'Modifier #'.concat(question.numQuest.toString()) : 'Nouvelle question'}</span>
             </div>

@@ -13,6 +13,29 @@
         .qcm-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
         .qcm-card-head { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
         .qcm-body { padding: 16px 18px; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    if (sidebar.classList.contains('open')) {
+                        document.body.classList.add('sidebar-open');
+                    } else {
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
+                        sidebar.classList.remove('open');
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+            }
+        });
+    </script>
         .qcm-question { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
         .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .ans { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-size: 0.82rem; }
@@ -33,6 +56,7 @@
 
     <div class="main-content">
         <div class="topbar">
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
             <div class="topbar-title">
                 ❓ Questions QCM <span class="topbar-breadcrumb">/ Liste</span>
             </div>

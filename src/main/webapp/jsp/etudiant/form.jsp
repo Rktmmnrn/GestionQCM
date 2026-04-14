@@ -8,6 +8,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${editMode ? 'Modifier' : 'Ajouter'} étudiant — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggle && sidebar) {
+                toggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    if (sidebar.classList.contains('open')) {
+                        document.body.classList.add('sidebar-open');
+                    } else {
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
+                        sidebar.classList.remove('open');
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 <body>
 <div class="app-shell">

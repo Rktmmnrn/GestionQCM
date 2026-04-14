@@ -29,6 +29,7 @@
 
     <div class="main-content">
         <div class="topbar">
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
             <div class="topbar-title">
                 🏆 Classement <span class="topbar-breadcrumb">/ Général</span>
             </div>
