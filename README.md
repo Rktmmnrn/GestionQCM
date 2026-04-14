@@ -35,6 +35,8 @@ src/main/
 ```
 
 > Les pages JSP sont servies depuis `/jsp/...`. Il n'y a pas de structure active sous `WEB-INF/views/`.
+>
+> Tous les styles locaux sont centralisés dans `src/main/webapp/css/` et les scripts JavaScript peuvent être ajoutés sous `src/main/webapp/js/`.
 
 ## 🚀 Prérequis
 
