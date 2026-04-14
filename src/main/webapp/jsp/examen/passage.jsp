@@ -2,365 +2,263 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
-    // Vérifier que la session contient les questions
     java.util.List<?> questions = (java.util.List<?>) session.getAttribute("questions");
     if (questions == null || questions.isEmpty()) {
         response.sendRedirect(request.getContextPath() + "/examen?action=start");
         return;
     }
+    request.setAttribute("currentPage", "examen");
 %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Passage d'Examen QCM</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Examen en cours — GestionExamens</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
     <style>
-        :root { --accent: #6366f1; --accent2: #8b5cf6; }
-        * { font-family: 'Sora', sans-serif; }
-        body { background: #0f172a; min-height: 100vh; color: #f1f5f9; }
+        /* Exam-specific styles — sidebar hidden during exam */
+        .app-shell { display: block; }
+        .sidebar { display: none; }
+        .main-content { margin-left: 0; }
 
-        .exam-bar {
-            background: #1e293b;
-            border-bottom: 1px solid #334155;
-            padding: 14px 30px;
+        .exam-topbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 56px;
             display: flex; align-items: center; justify-content: space-between;
             position: sticky; top: 0; z-index: 100;
         }
-        .exam-title { font-weight: 800; font-size: 1.1rem; color: #f1f5f9; }
-        .exam-student { color: #64748b; font-size: 0.85rem; }
+        .exam-info { font-size: 0.85rem; color: var(--text2); }
+        .exam-info strong { color: var(--text); }
 
-        .timer-box {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            padding: 8px 20px;
-            text-align: center;
-            min-width: 120px;
+        .timer-wrap {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 16px;
         }
-        .timer { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
-        .timer.warn { color: #f59e0b; }
-        .timer.danger { color: #ef4444; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
-        .timer-lbl { font-size: 0.7rem; color: #475569; }
+        .timer { font-family: 'DM Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--text); }
+        .timer.warn { color: var(--warn); }
+        .timer.danger { color: var(--danger); animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-        .container-exam { max-width: 780px; margin: 0 auto; padding: 30px 20px; }
+        .exam-body { max-width: 760px; margin: 0 auto; padding: 24px 20px; }
 
-        .progress-bar-wrap {
-            background: #1e293b;
-            border-radius: 10px;
-            height: 8px;
-            margin-bottom: 8px;
-        }
-        .progress-fill {
-            height: 8px;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
-            transition: width 0.4s;
-        }
-        .progress-label { color: #64748b; font-size: 0.82rem; margin-bottom: 25px; }
+        /* Progress */
+        .progress-wrap { margin-bottom: 20px; }
+        .progress-bar { background: var(--surface2); border-radius: 4px; height: 5px; margin-bottom: 6px; }
+        .progress-fill { background: var(--accent); height: 5px; border-radius: 4px; transition: width 0.3s; }
+        .progress-label { font-size: 0.75rem; color: var(--text3); }
 
         /* Question tabs */
-        .q-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
-        .q-tab {
-            width: 38px; height: 38px;
-            border-radius: 50%;
-            border: 2px solid #334155;
-            background: #1e293b;
-            color: #94a3b8;
-            font-weight: 700; font-size: 0.85rem;
+        .q-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+        .q-dot {
+            width: 34px; height: 34px; border-radius: 50%;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text3);
+            font-size: 0.78rem; font-weight: 700; font-family: 'DM Mono', monospace;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s;
+            cursor: pointer; transition: all 0.15s;
         }
-        .q-tab.active { border-color: var(--accent); background: var(--accent); color: white; }
-        .q-tab.answered { border-color: #22c55e; color: #22c55e; }
-        .q-tab.answered.active { background: #22c55e; color: white; border-color: #22c55e; }
+        .q-dot:hover { border-color: var(--accent); color: var(--accent); }
+        .q-dot.active { background: var(--text); border-color: var(--text); color: white; }
+        .q-dot.answered { border-color: var(--accent); color: var(--accent); }
+        .q-dot.answered.active { background: var(--accent); border-color: var(--accent); color: white; }
 
         /* Question card */
-        .q-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 35px;
-            margin-bottom: 25px;
-            display: none;
-        }
+        .q-card { display: none; }
         .q-card.visible { display: block; }
-        .q-num {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: white;
-            border-radius: 8px;
-            padding: 5px 14px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 18px;
-        }
-        .q-text { font-size: 1.15rem; font-weight: 600; color: #e2e8f0; margin-bottom: 28px; line-height: 1.6; }
 
-        .answer-opt {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex; align-items: center; gap: 14px;
+        .q-card-inner {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
         }
-        .answer-opt:hover { border-color: var(--accent); background: rgba(99,102,241,0.05); }
-        .answer-opt input[type="radio"] { accent-color: var(--accent); width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
-        .answer-opt.selected { border-color: var(--accent); background: rgba(99,102,241,0.1); }
-        .opt-letter {
-            width: 28px; height: 28px;
-            border-radius: 6px;
-            background: #1e293b;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 0.85rem; color: #64748b;
-            flex-shrink: 0;
+        .q-head {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
         }
-        .opt-text { color: #cbd5e1; font-size: 0.95rem; }
+        .q-num { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); }
+        .q-body-inner { padding: 20px; }
+        .q-text { font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.6; margin-bottom: 20px; }
 
-        /* Navigation */
-        .nav-row {
-            display: flex; gap: 12px; justify-content: space-between; align-items: center;
-            margin-bottom: 25px;
+        .answer-label {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--bg); border: 1.5px solid var(--border);
+            border-radius: 8px; padding: 12px 16px;
+            margin-bottom: 10px; cursor: pointer; transition: all 0.15s;
         }
-        .btn-nav {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #94a3b8;
-            border-radius: 10px;
-            padding: 11px 24px;
-            font-weight: 600; font-size: 0.9rem;
-            font-family: 'Sora', sans-serif;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .btn-nav:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-        .btn-nav:disabled { opacity: 0.4; cursor: not-allowed; }
+        .answer-label:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .answer-label:has(input:checked) { border-color: var(--accent); background: var(--accent-bg); }
+        .answer-label input[type="radio"] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+        .ans-let { width: 24px; height: 24px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.72rem; color: white; flex-shrink: 0; }
+        .al-a { background: #6366f1; } .al-b { background: #8b5cf6; } .al-c { background: #0891b2; } .al-d { background: #d97706; }
+        .ans-txt { font-size: 0.875rem; color: var(--text2); }
+        .answer-label:has(input:checked) .ans-txt { color: var(--accent2); font-weight: 600; }
 
-        .btn-submit {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            border: none;
-            color: white;
-            border-radius: 10px;
-            padding: 14px 35px;
-            font-weight: 700; font-size: 1rem;
-            font-family: 'Sora', sans-serif;
-            cursor: pointer; transition: all 0.3s;
-            width: 100%;
-            box-shadow: 0 6px 20px rgba(34,197,94,0.3);
-        }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(34,197,94,0.4); }
+        /* Nav buttons */
+        .nav-btns { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
-        .submit-section {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 25px 30px;
+        /* Submit */
+        .submit-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
             text-align: center;
         }
-        .submit-hint { color: #64748b; font-size: 0.85rem; margin-bottom: 18px; }
-
-        /* All mode */
-        .q-card.all-mode { display: block !important; margin-bottom: 20px; }
-        .toggle-view-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #94a3b8;
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-size: 0.85rem; font-weight: 600;
-            font-family: 'Sora', sans-serif;
-            cursor: pointer; transition: all 0.2s;
-            margin-bottom: 20px;
+        .submit-hint { font-size: 0.8rem; color: var(--text3); margin-bottom: 14px; min-height: 20px; }
+        .btn-submit-exam {
+            background: var(--accent); color: white;
+            border: none; border-radius: 8px;
+            padding: 12px 32px; font-size: 0.95rem; font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer; transition: all 0.15s;
         }
-        .toggle-view-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-submit-exam:hover { background: var(--accent2); }
     </style>
 </head>
 <body>
-    <!-- Barre d'examen -->
-    <div class="exam-bar">
-        <div>
-            <div class="exam-title">✏️ Examen QCM</div>
-            <div class="exam-student">Étudiant : ${sessionScope.nomEtudiant} | ${sessionScope.anneeUniv}</div>
-        </div>
-        <div class="timer-box">
-            <div class="timer" id="timer">15:00</div>
-            <div class="timer-lbl">⏱ Temps restant</div>
-        </div>
-    </div>
+<div class="app-shell">
+    <%@ include file="/jsp/common/sidebar.jspf" %>
 
-    <div class="container-exam">
-        <!-- Progression -->
-        <div class="progress-bar-wrap">
-            <div class="progress-fill" id="progressFill" style="width:0%"></div>
-        </div>
-        <div class="progress-label">
-            <span id="answeredCount">0</span> / <c:out value="${fn:length(sessionScope.questions)}"/> questions répondues
+    <div class="main-content">
+        <div class="exam-topbar">
+            <div class="exam-info">
+                ✏️ <strong>Examen QCM</strong>
+                <span style="margin-left:12px;">Étudiant : <strong>${sessionScope.nomEtudiant}</strong></span>
+                <span style="margin-left:8px;color:var(--text3);">— ${sessionScope.anneeUniv}</span>
+            </div>
+            <div class="timer-wrap">
+                <span style="font-size:0.75rem;color:var(--text3);">⏱</span>
+                <span class="timer" id="timer">15:00</span>
+            </div>
         </div>
 
-        <!-- Tabs questions -->
-        <div class="q-tabs" id="qTabs">
-            <c:forEach var="q" items="${sessionScope.questions}" varStatus="s">
-                <div class="q-tab <c:if test="${s.index == 0}">active</c:if>"
-                     id="tab${s.index}"
-                     onclick="goTo(${s.index})">
-                    ${s.index + 1}
+        <div class="exam-body">
+
+            <!-- Progress -->
+            <div class="progress-wrap">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:0%"></div>
                 </div>
-            </c:forEach>
-        </div>
+                <div class="progress-label">
+                    <span id="answeredCount">0</span> / <c:out value="${fn:length(sessionScope.questions)}"/> répondues
+                </div>
+            </div>
 
-        <!-- Toggle vue -->
-        <button class="toggle-view-btn" id="toggleBtn" onclick="toggleView()">
-            👁 Voir toutes les questions
-        </button>
+            <!-- Question navigation dots -->
+            <div class="q-nav" id="qNav">
+                <c:forEach var="q" items="${sessionScope.questions}" varStatus="s">
+                    <div class="q-dot ${s.index == 0 ? 'active' : ''}" id="dot${s.index}" onclick="goTo(${s.index})">${s.index + 1}</div>
+                </c:forEach>
+            </div>
 
-        <!-- Formulaire -->
-        <form method="POST" action="${pageContext.request.contextPath}/examen" id="examForm">
-            <input type="hidden" name="action" value="corriger">
+            <!-- Form -->
+            <form method="POST" action="${pageContext.request.contextPath}/examen" id="examForm">
+                <input type="hidden" name="action" value="corriger">
 
-            <!-- Questions -->
-            <c:forEach var="q" items="${sessionScope.questions}" varStatus="s">
-                <div class="q-card <c:if test="${s.index == 0}">visible</c:if>"
-                     id="qcard${s.index}">
-                    <div class="q-num">Question ${s.index + 1} / <c:out value="${fn:length(sessionScope.questions)}"/></div>
-                    <div class="q-text">${q.question}</div>
-
-                    <div class="answers">
-                        <label class="answer-opt" id="opt${s.index}_1">
-                            <input type="radio" name="question_${s.index}" value="1"
-                                   onchange="onAnswer(${s.index})">
-                            <span class="opt-letter">A</span>
-                            <span class="opt-text">${q.reponse1}</span>
-                        </label>
-                        <label class="answer-opt" id="opt${s.index}_2">
-                            <input type="radio" name="question_${s.index}" value="2"
-                                   onchange="onAnswer(${s.index})">
-                            <span class="opt-letter">B</span>
-                            <span class="opt-text">${q.reponse2}</span>
-                        </label>
-                        <label class="answer-opt" id="opt${s.index}_3">
-                            <input type="radio" name="question_${s.index}" value="3"
-                                   onchange="onAnswer(${s.index})">
-                            <span class="opt-letter">C</span>
-                            <span class="opt-text">${q.reponse3}</span>
-                        </label>
-                        <label class="answer-opt" id="opt${s.index}_4">
-                            <input type="radio" name="question_${s.index}" value="4"
-                                   onchange="onAnswer(${s.index})">
-                            <span class="opt-letter">D</span>
-                            <span class="opt-text">${q.reponse4}</span>
-                        </label>
+                <c:forEach var="q" items="${sessionScope.questions}" varStatus="s">
+                    <div class="q-card ${s.index == 0 ? 'visible' : ''}" id="qcard${s.index}">
+                        <div class="q-card-inner">
+                            <div class="q-head">
+                                <span class="q-num">Question ${s.index + 1} sur <c:out value="${fn:length(sessionScope.questions)}"/></span>
+                            </div>
+                            <div class="q-body-inner">
+                                <div class="q-text">${q.question}</div>
+                                <label class="answer-label">
+                                    <input type="radio" name="question_${s.index}" value="1" onchange="onAnswer(${s.index})">
+                                    <span class="ans-let al-a">A</span>
+                                    <span class="ans-txt">${q.reponse1}</span>
+                                </label>
+                                <label class="answer-label">
+                                    <input type="radio" name="question_${s.index}" value="2" onchange="onAnswer(${s.index})">
+                                    <span class="ans-let al-b">B</span>
+                                    <span class="ans-txt">${q.reponse2}</span>
+                                </label>
+                                <label class="answer-label">
+                                    <input type="radio" name="question_${s.index}" value="3" onchange="onAnswer(${s.index})">
+                                    <span class="ans-let al-c">C</span>
+                                    <span class="ans-txt">${q.reponse3}</span>
+                                </label>
+                                <label class="answer-label">
+                                    <input type="radio" name="question_${s.index}" value="4" onchange="onAnswer(${s.index})">
+                                    <span class="ans-let al-d">D</span>
+                                    <span class="ans-txt">${q.reponse4}</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </c:forEach>
+                </c:forEach>
 
-            <!-- Navigation -->
-            <div class="nav-row" id="navRow">
-                <button type="button" class="btn-nav" id="prevBtn" onclick="prev()" disabled>
-                    ← Précédente
-                </button>
-                <button type="button" class="btn-nav" id="nextBtn" onclick="next()">
-                    Suivante →
-                </button>
-            </div>
-
-            <!-- Soumission -->
-            <div class="submit-section">
-                <div class="submit-hint">
-                    Vérifiez vos réponses avant de soumettre.<br>
-                    <strong id="submitHint" style="color:#f59e0b;"></strong>
+                <!-- Navigation -->
+                <div class="nav-btns">
+                    <button type="button" class="btn btn-ghost" id="prevBtn" onclick="prev()" disabled>← Précédente</button>
+                    <button type="button" class="btn btn-ghost" id="nextBtn" onclick="next()">Suivante →</button>
                 </div>
-                <button type="submit" class="btn-submit"
-                        onclick="return confirmSubmit()">
-                    ✅ Soumettre l'examen
-                </button>
-            </div>
-        </form>
+
+                <!-- Submit -->
+                <div class="submit-card">
+                    <div class="submit-hint" id="submitHint">Répondez à toutes les questions avant de soumettre</div>
+                    <button type="submit" class="btn-submit-exam" onclick="return confirmSubmit()">
+                        ✅ Soumettre l'examen
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
-    <script>
-        const TOTAL = ${fn:length(sessionScope.questions)};
-        let current = 0;
-        let timeLeft = 15 * 60;
-        let allMode = false;
-        const answered = new Set();
+<script>
+const TOTAL = ${fn:length(sessionScope.questions)};
+let current = 0;
+let timeLeft = 15 * 60;
+const answered = new Set();
 
-        // Timer
-        const timerEl = document.getElementById('timer');
-        const interval = setInterval(() => {
-            timeLeft--;
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                document.getElementById('examForm').submit();
-                return;
-            }
-            const m = Math.floor(timeLeft / 60);
-            const s = timeLeft % 60;
-            timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-            timerEl.className = 'timer';
-            if (timeLeft < 120) timerEl.classList.add('danger');
-            else if (timeLeft < 300) timerEl.classList.add('warn');
-        }, 1000);
+// Timer
+const timerEl = document.getElementById('timer');
+const iv = setInterval(() => {
+    if (--timeLeft <= 0) { clearInterval(iv); document.getElementById('examForm').submit(); return; }
+    const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+    timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    timerEl.className = 'timer' + (timeLeft < 120 ? ' danger' : timeLeft < 300 ? ' warn' : '');
+}, 1000);
 
-        function goTo(idx) {
-            if (allMode) return;
-            document.querySelectorAll('.q-card').forEach(c => c.classList.remove('visible'));
-            document.querySelectorAll('.q-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('qcard' + idx).classList.add('visible');
-            document.getElementById('tab' + idx).classList.add('active');
-            current = idx;
-            document.getElementById('prevBtn').disabled = (idx === 0);
-            document.getElementById('nextBtn').disabled = (idx === TOTAL - 1);
-            document.getElementById('nextBtn').textContent = (idx === TOTAL - 1) ? '— Fin —' : 'Suivante →';
-        }
+function goTo(idx) {
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('visible'));
+    document.querySelectorAll('.q-dot').forEach(d => d.classList.remove('active'));
+    document.getElementById('qcard' + idx).classList.add('visible');
+    document.getElementById('dot' + idx).classList.add('active');
+    current = idx;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === TOTAL - 1;
+}
+function prev() { if (current > 0) goTo(current - 1); }
+function next() { if (current < TOTAL - 1) goTo(current + 1); }
 
-        function prev() { if (current > 0) goTo(current - 1); }
-        function next() { if (current < TOTAL - 1) goTo(current + 1); }
+function onAnswer(idx) {
+    answered.add(idx);
+    document.getElementById('dot' + idx).classList.add('answered');
+    document.getElementById('answeredCount').textContent = answered.size;
+    document.getElementById('progressFill').style.width = (answered.size / TOTAL * 100) + '%';
+    const rem = TOTAL - answered.size;
+    const hint = document.getElementById('submitHint');
+    if (rem === 0) { hint.textContent = '✓ Toutes les questions répondues'; hint.style.color = 'var(--accent)'; }
+    else { hint.textContent = rem + ' question(s) sans réponse'; hint.style.color = 'var(--text3)'; }
+}
 
-        function onAnswer(idx) {
-            answered.add(idx);
-            document.getElementById('tab' + idx).classList.add('answered');
-            // Update progress
-            document.getElementById('answeredCount').textContent = answered.size;
-            document.getElementById('progressFill').style.width = (answered.size / TOTAL * 100) + '%';
-            // Update submit hint
-            const remaining = TOTAL - answered.size;
-            const hint = document.getElementById('submitHint');
-            hint.textContent = remaining > 0 ? remaining + ' question(s) sans réponse' : '✓ Toutes les questions répondues !';
-            hint.style.color = remaining > 0 ? '#f59e0b' : '#22c55e';
-        }
-
-        function toggleView() {
-            allMode = !allMode;
-            const cards = document.querySelectorAll('.q-card');
-            const btn = document.getElementById('toggleBtn');
-            const nav = document.getElementById('navRow');
-            const tabs = document.getElementById('qTabs');
-            if (allMode) {
-                cards.forEach(c => { c.classList.add('all-mode'); c.classList.remove('visible'); });
-                btn.textContent = '👁 Voir une question à la fois';
-                nav.style.display = 'none';
-                tabs.style.display = 'none';
-            } else {
-                cards.forEach(c => c.classList.remove('all-mode'));
-                btn.textContent = '👁 Voir toutes les questions';
-                nav.style.display = 'flex';
-                tabs.style.display = 'flex';
-                goTo(current);
-            }
-        }
-
-        function confirmSubmit() {
-            const unanswered = TOTAL - answered.size;
-            if (unanswered > 0) {
-                return confirm(unanswered + ' question(s) sans réponse. Soumettre quand même ?');
-            }
-            return confirm('Confirmer la soumission de votre examen ?');
-        }
-    </script>
+function confirmSubmit() {
+    const unanswered = TOTAL - answered.size;
+    if (unanswered > 0) return confirm(unanswered + ' question(s) sans réponse. Soumettre quand même ?');
+    return confirm('Soumettre votre examen ?');
+}
+</script>
 </body>
 </html>

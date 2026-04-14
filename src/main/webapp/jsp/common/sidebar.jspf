@@ -1,0 +1,64 @@
+<%-- sidebar.jspf — included via <%@ include file="/jsp/common/sidebar.jspf" %> --%>
+<%
+    String currentPage = (String) request.getAttribute("currentPage");
+    if (currentPage == null) currentPage = "";
+    String ctx = request.getContextPath();
+%>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-icon">📚</div>
+        <div>
+            <div class="logo-text">GestionExamens</div>
+            <div class="logo-sub">Plateforme ENI · L3</div>
+        </div>
+    </div>
+
+    <div class="sidebar-section">Navigation</div>
+
+    <a href="<%= ctx %>/" class="nav-item <%= "home".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">🏠</span> Accueil
+    </a>
+
+    <div class="sidebar-section">Gestion</div>
+
+    <a href="<%= ctx %>/etudiant" class="nav-item <%= "etudiants".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">👥</span> Étudiants
+    </a>
+    <a href="<%= ctx %>/etudiant?action=new" class="nav-item <%= "etudiant-new".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">➕</span> Ajouter étudiant
+    </a>
+    <a href="<%= ctx %>/etudiant?action=search&searchType=nom&searchValue=" class="nav-item <%= "etudiant-search".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">🔍</span> Rechercher
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="<%= ctx %>/qcm" class="nav-item <%= "qcm".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">❓</span> Questions QCM
+    </a>
+    <a href="<%= ctx %>/qcm?action=new" class="nav-item <%= "qcm-new".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">➕</span> Ajouter question
+    </a>
+
+    <div class="sidebar-section">Examens</div>
+
+    <a href="<%= ctx %>/examen" class="nav-item <%= "examen".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">✏️</span> Passer l'examen
+    </a>
+    <a href="<%= ctx %>/examen?action=classement" class="nav-item <%= "classement".equals(currentPage) ? "active" : "" %>">
+        <span class="nav-icon">🏆</span> Classement
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="<%= ctx %>/diagnostic.jsp" class="nav-item">
+        <span class="nav-icon">🔧</span> Diagnostic BD
+    </a>
+    <a href="<%= ctx %>/email?action=test" class="nav-item">
+        <span class="nav-icon">📧</span> Test email
+    </a>
+
+    <div class="sidebar-footer">
+        <a href="<%= ctx %>/">← Retour accueil</a>
+    </div>
+</aside>

@@ -1,152 +1,112 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.examen.dao.QCMDAO" %>
+<% 
+    request.setAttribute("currentPage", "examen");
+    QCMDAO qDAO = new QCMDAO();
+    int nbQ = qDAO.count();
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examens QCM</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Sora', sans-serif;
-            background: #0f172a;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-        .hero-card {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid #334155;
-            border-radius: 24px;
-            padding: 60px 50px;
-            max-width: 680px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-        }
-        .icon-circle {
-            width: 90px; height: 90px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem;
-            margin: 0 auto 30px;
-            box-shadow: 0 8px 30px rgba(99,102,241,0.4);
-        }
-        h1 { color: #f1f5f9; font-size: 2rem; font-weight: 800; margin-bottom: 12px; }
-        .subtitle { color: #94a3b8; font-size: 1.05rem; margin-bottom: 40px; }
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        .info-box {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 18px 12px;
-        }
-        .info-box .val { color: #6366f1; font-size: 1.6rem; font-weight: 800; }
-        .info-box .lbl { color: #64748b; font-size: 0.8rem; margin-top: 4px; }
-        .btn-start {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 16px 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: 'Sora', sans-serif;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-            box-shadow: 0 8px 25px rgba(99,102,241,0.4);
-        }
-        .btn-start:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(99,102,241,0.5);
-            color: white;
-        }
-        .btn-classement {
-            background: transparent;
-            color: #94a3b8;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 14px 30px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Sora', sans-serif;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-            margin-left: 15px;
-        }
-        .btn-classement:hover {
-            border-color: #6366f1;
-            color: #6366f1;
-        }
-        .rules {
-            background: rgba(99,102,241,0.08);
-            border: 1px solid rgba(99,102,241,0.2);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: left;
-            margin-bottom: 35px;
-        }
-        .rules li { color: #94a3b8; font-size: 0.9rem; margin-bottom: 6px; }
-        .back-link { margin-top: 30px; }
-        .back-link a { color: #64748b; text-decoration: none; font-size: 0.9rem; }
-        .back-link a:hover { color: #94a3b8; }
-    </style>
+    <title>Examen QCM — GestionExamens</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
 </head>
 <body>
-    <div class="hero-card">
-        <div class="icon-circle">✏️</div>
-        <h1>Examen QCM en ligne</h1>
-        <p class="subtitle">Testez vos connaissances avec 10 questions choisies aléatoirement</p>
+<div class="app-shell">
+    <%@ include file="/jsp/common/sidebar.jspf" %>
 
-        <div class="info-grid">
-            <div class="info-box">
-                <div class="val">10</div>
-                <div class="lbl">Questions</div>
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-title">
+                ✏️ Examen QCM <span class="topbar-breadcrumb">/ Accueil</span>
             </div>
-            <div class="info-box">
-                <div class="val">15 min</div>
-                <div class="lbl">Durée</div>
-            </div>
-            <div class="info-box">
-                <div class="val">/10</div>
-                <div class="lbl">Note sur</div>
+            <div class="topbar-actions">
+                <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost">🏆 Classement</a>
             </div>
         </div>
 
-        <div class="rules">
-            <ul style="margin:0; padding-left: 20px;">
-                <li>Une seule réponse correcte par question</li>
-                <li>Le timer démarre dès le début du QCM</li>
-                <li>La soumission est automatique à la fin du temps</li>
-                <li>Le résultat vous est envoyé par email</li>
-                <li>Seuil de réussite : 5/10</li>
-            </ul>
-        </div>
+        <div class="page-body">
+            <div style="max-width:640px;margin:0 auto;">
 
-        <div>
-            <a href="${pageContext.request.contextPath}/examen?action=start" class="btn-start">
-                🚀 Commencer l'examen
-            </a>
-            <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn-classement">
-                🏆 Classement
-            </a>
-        </div>
+                <% if (nbQ < 10) { %>
+                <div class="alert alert-warn" style="margin-bottom:20px;">
+                    ⚠️ Seulement <%= nbQ %> question(s) dans la banque. Il en faut au moins <strong>10</strong> pour passer un examen.
+                    <a href="<%= request.getContextPath() %>/qcm?action=new" style="color:var(--warn);font-weight:600;margin-left:8px;">Ajouter des questions →</a>
+                </div>
+                <% } %>
 
-        <div class="back-link">
-            <a href="${pageContext.request.contextPath}/">← Retour à l'accueil</a>
+                <div class="card mb-6">
+                    <div class="card-header">
+                        <span class="card-title">📋 Informations sur l'examen</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-row" style="margin-bottom:0;">
+                            <div class="stat-card blue">
+                                <div class="stat-label">Questions</div>
+                                <div class="stat-value">10</div>
+                                <div class="stat-sub">tirées au sort</div>
+                            </div>
+                            <div class="stat-card amber">
+                                <div class="stat-label">Durée</div>
+                                <div class="stat-value">15</div>
+                                <div class="stat-sub">minutes</div>
+                            </div>
+                            <div class="stat-card green">
+                                <div class="stat-label">Note max</div>
+                                <div class="stat-value">10</div>
+                                <div class="stat-sub">seuil : 5/10</div>
+                            </div>
+                            <div class="stat-card <%= nbQ >= 10 ? "green" : "red" %>">
+                                <div class="stat-label">Disponibles</div>
+                                <div class="stat-value"><%= nbQ %></div>
+                                <div class="stat-sub"><%= nbQ >= 10 ? "✓ OK" : "✗ Insuffisant" %></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🚀 Commencer un examen</span>
+                    </div>
+                    <div class="card-body">
+                        <% if (nbQ < 10) { %>
+                            <p class="text-muted text-sm" style="margin-bottom:16px;">
+                                L'examen ne peut pas démarrer — il manque des questions dans la banque.
+                            </p>
+                            <a href="<%= request.getContextPath() %>/qcm?action=new" class="btn btn-primary">➕ Ajouter des questions</a>
+                        <% } else { %>
+                            <p class="text-muted text-sm" style="margin-bottom:16px;">
+                                Entrez votre numéro étudiant et l'année universitaire pour démarrer l'examen.
+                                Vous recevrez vos résultats par email à la fin.
+                            </p>
+                            <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary" style="font-size:1rem;padding:12px 28px;">
+                                ✏️ Démarrer l'examen
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <div class="card">
+                        <div class="card-body" style="padding:14px 18px;">
+                            <div class="text-muted text-sm" style="font-weight:600;margin-bottom:8px;">📌 Règles de l'examen</div>
+                            <ul style="margin:0;padding-left:18px;color:var(--text3);font-size:0.82rem;line-height:2;">
+                                <li>Une seule réponse correcte par question</li>
+                                <li>Le timer démarre immédiatement après le début</li>
+                                <li>La soumission est automatique à la fin du temps</li>
+                                <li>Vos résultats sont envoyés par email à votre adresse enregistrée</li>
+                                <li>Votre note est enregistrée dans le classement général</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+</div>
 </body>
 </html>
