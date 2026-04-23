@@ -13,6 +13,18 @@
         .qcm-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
         .qcm-card-head { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
         .qcm-body { padding: 16px 18px; }
+        .qcm-question { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+        .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .ans { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-size: 0.82rem; }
+        .ans.correct { background: var(--accent-bg); border-color: #bbf7d0; }
+        .ans .let { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.72rem; color: white; flex-shrink: 0; }
+        .la { background: #6366f1; }
+        .lb { background: #8b5cf6; }
+        .lc { background: #0891b2; }
+        .ld { background: #d97706; }
+        .ans.correct .ans-text { color: var(--accent2); font-weight: 600; }
+        .ans-text { color: var(--text2); }
+        .correct-tag { margin-left: auto; font-size: 0.65rem; font-weight: 700; color: var(--accent2); }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -36,19 +48,6 @@
             }
         });
     </script>
-        .qcm-question { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
-        .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .ans { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); font-size: 0.82rem; }
-        .ans.correct { background: var(--accent-bg); border-color: #bbf7d0; }
-        .ans .let { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.72rem; color: white; flex-shrink: 0; }
-        .la { background: #6366f1; }
-        .lb { background: #8b5cf6; }
-        .lc { background: #0891b2; }
-        .ld { background: #d97706; }
-        .ans.correct .ans-text { color: var(--accent2); font-weight: 600; }
-        .ans-text { color: var(--text2); }
-        .correct-tag { margin-left: auto; font-size: 0.65rem; font-weight: 700; color: var(--accent2); }
-    </style>
 </head>
 <body>
 <div class="app-shell">
