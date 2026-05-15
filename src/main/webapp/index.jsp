@@ -20,7 +20,6 @@
         moyenne = Math.round((sum * 10.0 / nbExamens)) / 10.0;
     }
     List<Examen> classement = exDAO.getClassement();
-    // Top 5
     int top = Math.min(5, classement.size());
 %>
 <!DOCTYPE html>
@@ -30,29 +29,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('menu-toggle');
-            const sidebar = document.getElementById('sidebar');
-            if (toggle && sidebar) {
-                toggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('open');
-                    if (sidebar.classList.contains('open')) {
-                        document.body.classList.add('sidebar-open');
-                    } else {
-                        document.body.classList.remove('sidebar-open');
-                    }
-                });
-                // Fermer le sidebar en cliquant en dehors
-                document.addEventListener('click', function(e) {
-                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
-                        sidebar.classList.remove('open');
-                        document.body.classList.remove('sidebar-open');
-                    }
-                });
-            }
-        });
-    </script>
 </head>
 <body>
 <div class="app-shell">
@@ -60,83 +36,69 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
+            <button class="sidebar-toggle" id="menu-toggle" aria-label="Menu">&#9776;</button>
             <div class="topbar-title">
-                &#127968; <span class="topbar-breadcrumb">Tableau de bord</span>
+                Tableau de bord
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">&#9999; Démarrer un examen</a>
+                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">Demarrer un examen</a>
             </div>
         </div>
 
         <div class="page-body">
-
-            <!-- Stats -->
             <div class="stats-row">
                 <div class="stat-card blue">
-                    <div class="stat-label">Étudiants inscrits</div>
+                    <div class="stat-label">Etudiants inscrits</div>
                     <div class="stat-value"><%= nbEtudiants %></div>
-                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/etudiant" style="color:var(--info);text-decoration:none;font-size:0.75rem;">Voir la liste →</a></div>
+                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/etudiant" style="color:var(--info);text-decoration:none;font-size:0.75rem;">Voir la liste &rarr;</a></div>
                 </div>
                 <div class="stat-card green">
                     <div class="stat-label">Questions QCM</div>
                     <div class="stat-value"><%= nbQuestions %></div>
-                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/qcm" style="color:var(--accent);text-decoration:none;font-size:0.75rem;">Gérer →</a></div>
+                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/qcm" style="color:var(--accent);text-decoration:none;font-size:0.75rem;">Gerer &rarr;</a></div>
                 </div>
                 <div class="stat-card amber">
-                    <div class="stat-label">Examens passés</div>
+                    <div class="stat-label">Examens passes</div>
                     <div class="stat-value"><%= nbExamens %></div>
-                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/examen?action=classement" style="color:var(--warn);text-decoration:none;font-size:0.75rem;">Classement →</a></div>
+                    <div class="stat-sub"><a href="${pageContext.request.contextPath}/examen?action=classement" style="color:var(--warn);text-decoration:none;font-size:0.75rem;">Classement &rarr;</a></div>
                 </div>
                 <div class="stat-card <%= moyenne >= 5 ? "green" : "red" %>">
-                    <div class="stat-label">Moyenne générale</div>
+                    <div class="stat-label">Moyenne generale</div>
                     <div class="stat-value"><%= nbExamens > 0 ? moyenne : "—" %></div>
                     <div class="stat-sub">Note sur 10</div>
                 </div>
             </div>
 
-            <!-- Grille principale -->
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
-
-                <!-- Actions rapides -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">⚡ Actions rapides</span>
+                        <span class="card-title">Actions rapides</span>
                     </div>
                     <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
-                        <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary w-full" style="justify-content:center;">
-                            ✏️ Passer un examen QCM
-                        </a>
-                        <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-ghost w-full" style="justify-content:center;">
-                            👤 Ajouter un étudiant
-                        </a>
-                        <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-ghost w-full" style="justify-content:center;">
-                            ❓ Ajouter une question QCM
-                        </a>
-                        <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost w-full" style="justify-content:center;">
-                            🏆 Voir le classement
-                        </a>
+                        <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary w-full" style="justify-content:center;">Passer un examen QCM</a>
+                        <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-ghost w-full" style="justify-content:center;">Ajouter un etudiant</a>
+                        <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-ghost w-full" style="justify-content:center;">Ajouter une question QCM</a>
+                        <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost w-full" style="justify-content:center;">Voir le classement</a>
                     </div>
                 </div>
 
-                <!-- Infos système -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">ℹ️ État du système</span>
+                        <span class="card-title">Etat du systeme</span>
                     </div>
                     <div class="card-body">
                         <table class="data-table">
                             <tr>
-                                <td class="text-muted text-sm">Base de données</td>
-                                <td><span class="badge badge-green">✓ Connectée</span></td>
+                                <td class="text-muted text-sm">Base de donnees</td>
+                                <td><span class="badge badge-green">&#10003; Connectee</span></td>
                             </tr>
                             <tr>
                                 <td class="text-muted text-sm">Questions disponibles</td>
                                 <td>
                                     <% if (nbQuestions >= 10) { %>
-                                        <span class="badge badge-green"><%= nbQuestions %> / 10 min ✓</span>
+                                        <span class="badge badge-green"><%= nbQuestions %> / 10 min &#10003;</span>
                                     <% } else { %>
-                                        <span class="badge badge-red"><%= nbQuestions %> / 10 min ✗</span>
+                                        <span class="badge badge-red"><%= nbQuestions %> / 10 min &#10007;</span>
                                     <% } %>
                                 </td>
                             </tr>
@@ -145,32 +107,31 @@
                                 <td><span class="badge badge-blue">Gmail TLS</span></td>
                             </tr>
                             <tr>
-                                <td class="text-muted text-sm">Durée examen</td>
+                                <td class="text-muted text-sm">Duree examen</td>
                                 <td><span class="badge badge-gray">15 minutes</span></td>
                             </tr>
                             <tr>
-                                <td class="text-muted text-sm">Seuil de réussite</td>
+                                <td class="text-muted text-sm">Seuil de reussite</td>
                                 <td><span class="badge badge-gray">5 / 10</span></td>
                             </tr>
                         </table>
                         <div style="margin-top:14px;">
-                            <a href="${pageContext.request.contextPath}/diagnostic.jsp" class="btn btn-ghost btn-sm">🔧 Diagnostic complet</a>
+                            <a href="${pageContext.request.contextPath}/diagnostic.jsp" class="btn btn-ghost btn-sm">Diagnostic</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Derniers résultats -->
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">📊 Derniers résultats</span>
+                    <span class="card-title">Derniers resultats</span>
                     <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost btn-sm">Voir tout</a>
                 </div>
                 <% if (top == 0) { %>
                 <div class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <h3>Aucun examen passé</h3>
-                    <p>Les résultats apparaîtront ici après le premier examen.</p>
+                    <div class="empty-icon">&#128203;</div>
+                    <h3>Aucun examen passe</h3>
+                    <p>Les resultats apparaitront ici apres le premier examen.</p>
                     <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">Passer le premier examen</a>
                 </div>
                 <% } else { %>
@@ -178,9 +139,9 @@
                     <thead>
                         <tr>
                             <th>Rang</th>
-                            <th>Étudiant</th>
-                            <th>Numéro</th>
-                            <th>Année univ.</th>
+                            <th>Etudiant</th>
+                            <th>Numero</th>
+                            <th>Annee univ.</th>
                             <th>Note</th>
                             <th>Statut</th>
                         </tr>
@@ -196,28 +157,16 @@
                             <td class="mono"><span class="badge badge-blue"><%= ex.getNumEtudiant() %></span></td>
                             <td class="text-muted"><%= ex.getAnneeUniv() %></td>
                             <td style="font-weight:700;font-family:'DM Mono',monospace;"><%= ex.getNote() %>/10</td>
-                            <td><span class="badge <%= admis ? "badge-green" : "badge-red" %>"><%= admis ? "Admis" : "Refusé" %></span></td>
+                            <td><span class="badge <%= admis ? "badge-green" : "badge-red" %>"><%= admis ? "Admis" : "Refuse" %></span></td>
                         </tr>
                         <% } %>
                     </tbody>
                 </table>
                 <% } %>
             </div>
-
         </div>
     </div>
 </div>
-
-<script>
-// Mobile sidebar toggle
-document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.querySelector('.sidebar-toggle');
-    if (toggle) {
-        toggle.addEventListener('click', () => {
-            document.getElementById('sidebar').classList.toggle('open');
-        });
-    }
-});
-</script>
+<script src="${pageContext.request.contextPath}/js/sidebar-toggle.js"></script>
 </body>
 </html>

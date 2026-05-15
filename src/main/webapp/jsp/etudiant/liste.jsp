@@ -6,30 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Étudiants — GestionQuestionnaire</title>
+    <title>Etudiants — GestionQuestionnaire</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggle = document.getElementById('menu-toggle');
-            const sidebar = document.getElementById('sidebar');
-            if (toggle && sidebar) {
-                toggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('open');
-                    if (sidebar.classList.contains('open')) {
-                        document.body.classList.add('sidebar-open');
-                    } else {
-                        document.body.classList.remove('sidebar-open');
-                    }
-                });
-                document.addEventListener('click', function(e) {
-                    if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
-                        sidebar.classList.remove('open');
-                        document.body.classList.remove('sidebar-open');
-                    }
-                });
-            }
-        });
-    </script>
 </head>
 <body>
 <div class="app-shell">
@@ -37,26 +15,23 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
+            <button class="sidebar-toggle" id="menu-toggle" aria-label="Menu">&#9776;</button>
             <div class="topbar-title">
-                &#128101; Étudiants <span class="topbar-breadcrumb">/ Liste</span>
+                Etudiants <span class="topbar-breadcrumb">/ Liste</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">&#10133; Ajouter</a>
+                <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">+ Ajouter</a>
             </div>
         </div>
 
         <div class="page-body">
+            <c:if test="${param.success == 'created'}"><div class="alert alert-success">&#10003; Etudiant ajoute avec succes.</div></c:if>
+            <c:if test="${param.success == 'updated'}"><div class="alert alert-success">&#10003; Etudiant modifie avec succes.</div></c:if>
+            <c:if test="${param.success == 'deleted'}"><div class="alert alert-success">&#10003; Etudiant supprime.</div></c:if>
+            <c:if test="${param.error == 'createFailed'}"><div class="alert alert-error">&#10007; Erreur : le numero etudiant ou l'email existe deja.</div></c:if>
+            <c:if test="${param.error == 'deleteFailed'}"><div class="alert alert-error">&#10007; Impossible de supprimer cet etudiant.</div></c:if>
+            <c:if test="${param.error == 'notFound'}"><div class="alert alert-error">&#10007; Etudiant introuvable.</div></c:if>
 
-            <!-- Alertes -->
-            <c:if test="${param.success == 'created'}"><div class="alert alert-success">&#9989; Étudiant ajouté avec succès.</div></c:if>
-            <c:if test="${param.success == 'updated'}"><div class="alert alert-success">&#9989; Étudiant modifié avec succès.</div></c:if>
-            <c:if test="${param.success == 'deleted'}"><div class="alert alert-success">&#9989; Étudiant supprimé.</div></c:if>
-            <c:if test="${param.error == 'createFailed'}"><div class="alert alert-error">&#10060; Erreur : le numéro étudiant ou l'email existe déjà.</div></c:if>
-            <c:if test="${param.error == 'deleteFailed'}"><div class="alert alert-error">&#10060; Impossible de supprimer cet étudiant.</div></c:if>
-            <c:if test="${param.error == 'notFound'}"><div class="alert alert-error">&#10060; Étudiant introuvable.</div></c:if>
-
-            <!-- Recherche -->
             <div class="card mb-6">
                 <div class="card-body" style="padding:16px 20px;">
                     <form method="GET" action="${pageContext.request.contextPath}/etudiant" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
@@ -71,22 +46,21 @@
                         <div style="flex:1;min-width:180px;">
                             <label class="form-label">Valeur</label>
                             <input type="text" name="searchValue" class="form-control"
-                                   placeholder="Nom ou niveau (L1, L2…)"
+                                   placeholder="Nom ou niveau (L1, L2...)"
                                    value="${searchValue}">
                         </div>
                         <div style="padding-bottom:1px;">
-                            <button type="submit" class="btn btn-primary">🔍 Rechercher</button>
-                            <a href="${pageContext.request.contextPath}/etudiant" class="btn btn-ghost" style="margin-left:6px;">✕ Reset</a>
+                            <button type="submit" class="btn btn-primary">Rechercher</button>
+                            <a href="${pageContext.request.contextPath}/etudiant" class="btn btn-ghost" style="margin-left:6px;">Reset</a>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Table -->
             <div class="card">
                 <div class="card-header">
                     <span class="card-title">
-                        Liste des étudiants
+                        Liste des etudiants
                         <c:if test="${not empty etudiants}">
                             <span class="badge badge-gray" style="margin-left:8px;">${etudiants.size()}</span>
                         </c:if>
@@ -96,10 +70,10 @@
                 <c:choose>
                     <c:when test="${empty etudiants}">
                         <div class="empty-state">
-                            <div class="empty-icon">👥</div>
-                            <h3>Aucun étudiant trouvé</h3>
-                            <p>Ajoutez des étudiants ou modifiez votre recherche.</p>
-                            <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">➕ Ajouter un étudiant</a>
+                            <div class="empty-icon">&#128101;</div>
+                            <h3>Aucun etudiant trouve</h3>
+                            <p>Ajoutez des etudiants ou modifiez votre recherche.</p>
+                            <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">Ajouter un etudiant</a>
                         </div>
                     </c:when>
                     <c:otherwise>
@@ -108,8 +82,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Numéro</th>
-                                        <th>Nom & Prénoms</th>
+                                        <th>Numero</th>
+                                        <th>Nom &amp; Prenoms</th>
                                         <th>Niveau</th>
                                         <th>Email</th>
                                         <th>Actions</th>
@@ -134,10 +108,8 @@
                                             <td><a href="mailto:${e.adrEmail}" class="text-muted text-sm" style="text-decoration:none;">${e.adrEmail}</a></td>
                                             <td>
                                                 <div class="flex gap-2">
-                                                    <a href="${pageContext.request.contextPath}/etudiant?action=edit&id=${e.numEtudiant}"
-                                                       class="btn btn-ghost btn-sm">✏️ Modifier</a>
-                                                    <button class="btn btn-danger btn-sm"
-                                                            onclick="confirmDel('${e.numEtudiant}', '${e.nom}')">🗑️</button>
+                                                    <a href="${pageContext.request.contextPath}/etudiant?action=edit&id=${e.numEtudiant}" class="btn btn-ghost btn-sm">Modifier</a>
+                                                    <button class="btn btn-danger btn-sm" onclick="confirmDel('${e.numEtudiant}', '${e.nom}')">Suppr.</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -146,7 +118,7 @@
                             </table>
                         </div>
                         <div class="card-footer text-muted text-sm">
-                            ${etudiants.size()} étudiant(s) au total
+                            ${etudiants.size()} etudiant(s) au total
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -155,9 +127,10 @@
     </div>
 </div>
 
+<script src="${pageContext.request.contextPath}/js/sidebar-toggle.js"></script>
 <script>
 function confirmDel(id, nom) {
-    if (confirm('Supprimer l\'étudiant "' + nom + '" (' + id + ') ?\nCette action est irréversible.')) {
+    if (confirm('Supprimer l\'etudiant "' + nom + '" (' + id + ') ?\nCette action est irreversible.')) {
         window.location.href = '${pageContext.request.contextPath}/etudiant?action=delete&id=' + id;
     }
 }
