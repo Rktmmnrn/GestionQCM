@@ -37,24 +37,24 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                👥 Étudiants <span class="topbar-breadcrumb">/ Liste</span>
+                &#128101; Étudiants <span class="topbar-breadcrumb">/ Liste</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">➕ Ajouter</a>
+                <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">&#10133; Ajouter</a>
             </div>
         </div>
 
         <div class="page-body">
 
             <!-- Alertes -->
-            <c:if test="${param.success == 'created'}"><div class="alert alert-success">✅ Étudiant ajouté avec succès.</div></c:if>
-            <c:if test="${param.success == 'updated'}"><div class="alert alert-success">✅ Étudiant modifié avec succès.</div></c:if>
-            <c:if test="${param.success == 'deleted'}"><div class="alert alert-success">✅ Étudiant supprimé.</div></c:if>
-            <c:if test="${param.error == 'createFailed'}"><div class="alert alert-error">❌ Erreur : le numéro étudiant ou l'email existe déjà.</div></c:if>
-            <c:if test="${param.error == 'deleteFailed'}"><div class="alert alert-error">❌ Impossible de supprimer cet étudiant.</div></c:if>
-            <c:if test="${param.error == 'notFound'}"><div class="alert alert-error">❌ Étudiant introuvable.</div></c:if>
+            <c:if test="${param.success == 'created'}"><div class="alert alert-success">&#9989; Étudiant ajouté avec succès.</div></c:if>
+            <c:if test="${param.success == 'updated'}"><div class="alert alert-success">&#9989; Étudiant modifié avec succès.</div></c:if>
+            <c:if test="${param.success == 'deleted'}"><div class="alert alert-success">&#9989; Étudiant supprimé.</div></c:if>
+            <c:if test="${param.error == 'createFailed'}"><div class="alert alert-error">&#10060; Erreur : le numéro étudiant ou l'email existe déjà.</div></c:if>
+            <c:if test="${param.error == 'deleteFailed'}"><div class="alert alert-error">&#10060; Impossible de supprimer cet étudiant.</div></c:if>
+            <c:if test="${param.error == 'notFound'}"><div class="alert alert-error">&#10060; Étudiant introuvable.</div></c:if>
 
             <!-- Recherche -->
             <div class="card mb-6">

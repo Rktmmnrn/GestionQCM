@@ -29,12 +29,12 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                🏆 Classement <span class="topbar-breadcrumb">/ Général</span>
+                &#127942; Classement <span class="topbar-breadcrumb">/ Général</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">✏️ Passer l'examen</a>
+                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">&#9999; Passer l'examen</a>
             </div>
         </div>
 
@@ -43,10 +43,10 @@
                 <c:when test="${empty classement}">
                     <div class="card">
                         <div class="empty-state">
-                            <div class="empty-icon">🏆</div>
+                            <div class="empty-icon">&#127942;</div>
                             <h3>Aucun résultat</h3>
                             <p>Le classement apparaîtra après le premier examen.</p>
-                            <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">✏️ Passer le premier examen</a>
+                            <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">&#9999; Passer le premier examen</a>
                         </div>
                     </div>
                 </c:when>

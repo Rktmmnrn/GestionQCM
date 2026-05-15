@@ -15,9 +15,9 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                ✏️ Examen <span class="topbar-breadcrumb">/ Inscription</span>
+                &#9999; Examen <span class="topbar-breadcrumb">/ Inscription</span>
             </div>
             <div class="topbar-actions">
                 <a href="${pageContext.request.contextPath}/examen" class="btn btn-ghost">← Retour</a>
@@ -28,12 +28,12 @@
             <div style="max-width:440px;margin:0 auto;">
 
                 <c:if test="${not empty erreur}">
-                    <div class="alert alert-error">⚠️ ${erreur}</div>
+                    <div class="alert alert-error">&#9888; ${erreur}</div>
                 </c:if>
 
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">📋 Vos informations</span>
+                        <span class="card-title">&#128211; Vos informations</span>
                     </div>
                     <div class="card-body">
                         <p class="text-muted text-sm" style="margin-bottom:20px;">

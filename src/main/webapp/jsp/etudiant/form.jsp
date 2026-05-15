@@ -38,7 +38,7 @@
     <div class="main-content">
         <div class="topbar">
             <div class="topbar-title">
-                👥 Étudiants
+                &#128101; Étudiants
                 <span class="topbar-breadcrumb">/ ${editMode ? 'Modifier' : 'Ajouter'}</span>
             </div>
             <div class="topbar-actions">
@@ -49,7 +49,7 @@
         <div class="page-body">
             <c:if test="${not empty param.error}">
                 <div class="alert alert-error">
-                    ❌
+                    &#10060;
                     <c:choose>
                         <c:when test="${param.error == 'createFailed'}">Erreur : le numéro étudiant ou l'email existe peut-être déjà.</c:when>
                         <c:otherwise>Une erreur est survenue.</c:otherwise>

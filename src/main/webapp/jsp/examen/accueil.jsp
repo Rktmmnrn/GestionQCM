@@ -41,12 +41,12 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                ✏️ Examen QCM <span class="topbar-breadcrumb">/ Accueil</span>
+                &#9999; Examen QCM <span class="topbar-breadcrumb">/ Accueil</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost">🏆 Classement</a>
+                <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost">&#127942; Classement</a>
             </div>
         </div>
 

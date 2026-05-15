@@ -30,9 +30,9 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                ❓ QCM <span class="topbar-breadcrumb">/ ${not empty question ? 'Modifier #'.concat(question.numQuest.toString()) : 'Nouvelle question'}</span>
+                &#10067; QCM <span class="topbar-breadcrumb">/ ${not empty question ? 'Modifier #'.concat(question.numQuest.toString()) : 'Nouvelle question'}</span>
             </div>
             <div class="topbar-actions">
                 <a href="${pageContext.request.contextPath}/qcm" class="btn btn-ghost">← Liste</a>
@@ -43,7 +43,7 @@
             <div style="max-width:620px;">
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">${not empty question ? '✏️ Modifier la question' : '➕ Nouvelle question QCM'}</span>
+                        <span class="card-title">${not empty question ? '&#9999; Modifier la question' : '&#10133; Nouvelle question QCM'}</span>
                         <c:if test="${not empty question}">
                             <span class="badge badge-gray mono">#${question.numQuest}</span>
                         </c:if>

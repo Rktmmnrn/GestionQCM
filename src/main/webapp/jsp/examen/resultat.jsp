@@ -44,13 +44,13 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                📊 Résultats <span class="topbar-breadcrumb">/ Examen QCM</span>
+                &#128202; Résultats <span class="topbar-breadcrumb">/ Examen QCM</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">🔄 Repasser</a>
-                <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost">🏆 Classement</a>
+                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">&#128256; Repasser</a>
+                <a href="${pageContext.request.contextPath}/examen?action=classement" class="btn btn-ghost">&#127942; Classement</a>
             </div>
         </div>
 
@@ -63,7 +63,7 @@
                         <div class="score-num <%= admis ? "ok" : "ko" %>"><%= noteVal %>/10</div>
                         <div style="margin-top:10px;">
                             <span class="badge <%= admis ? "badge-green" : "badge-red" %>" style="font-size:0.85rem;padding:5px 14px;">
-                                <%= admis ? "✅ ADMIS" : "❌ NON ADMIS" %>
+                                <%= admis ? "&#9989; ADMIS" : "&#10060; NON ADMIS" %>
                             </span>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="alert alert-info" style="margin-bottom:0;">
-                            📧 Un récapitulatif a été envoyé à votre adresse email enregistrée.
+                            &#128231; Un récapitulatif a été envoyé à votre adresse email enregistrée.
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                 <!-- Détail -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">📋 Détail des réponses</span>
+                        <span class="card-title">&#128211; Détail des réponses</span>
                     </div>
                     <div class="card-body">
                         <% if (details != null) {

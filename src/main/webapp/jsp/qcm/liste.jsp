@@ -55,9 +55,9 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                ❓ Questions QCM <span class="topbar-breadcrumb">/ Liste</span>
+                &#10067; Questions QCM <span class="topbar-breadcrumb">/ Liste</span>
             </div>
             <div class="topbar-actions">
                 <a href="${pageContext.request.contextPath}/qcm?action=new" class="btn btn-primary">➕ Ajouter</a>

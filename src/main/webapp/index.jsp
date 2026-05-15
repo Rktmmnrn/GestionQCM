@@ -60,12 +60,12 @@
 
     <div class="main-content">
         <div class="topbar">
-            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">☰</button>
+            <button class="sidebar-toggle" id="menu-toggle" title="Afficher/masquer le menu">&#9776;</button>
             <div class="topbar-title">
-                🏠 <span class="topbar-breadcrumb">Tableau de bord</span>
+                &#127968; <span class="topbar-breadcrumb">Tableau de bord</span>
             </div>
             <div class="topbar-actions">
-                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">✏️ Démarrer un examen</a>
+                <a href="${pageContext.request.contextPath}/examen?action=start" class="btn btn-primary">&#9999; Démarrer un examen</a>
             </div>
         </div>
 
