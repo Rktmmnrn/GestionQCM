@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -111,197 +112,68 @@
         <!-- Statistiques globales -->
         <h3 class="section-title">Statistiques Générales</h3>
         <div class="row mb-4">
-            <!-- Total étudiants -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="stat-number">47</div>
+                    <div class="stat-number">${totalEtudiants}</div>
                     <div class="stat-label">Total d'étudiants</div>
                 </div>
             </div>
-            <!-- Licence -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="stat-number">28</div>
-                    <div class="stat-label">Étudiants en Licence</div>
+                    <div class="stat-number">${fn:length(niveaux)}</div>
+                    <div class="stat-label">Niveaux enregistrés</div>
                 </div>
             </div>
-            <!-- Masters -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="stat-card">
-                    <div class="stat-number">19</div>
-                    <div class="stat-label">Étudiants en Master</div>
-                </div>
-            </div>
-            <!-- Moyenne -->
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number">5.4</div>
-                    <div class="stat-label">Moyenne des notes</div>
+                    <div class="stat-number">${fn:length(niveaux)}</div>
+                    <div class="stat-label">Groupes de niveaux</div>
                 </div>
             </div>
         </div>
 
-        <!-- Tableau Licence 1 -->
-        <h3 class="section-title">
-            Licence 1ère année (L1) - 8 étudiants
-        </h3>
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N°</th>
-                        <th style="width: 20%;">Numéro</th>
-                        <th style="width: 25%;">Nom</th>
-                        <th style="width: 25%;">Prénoms</th>
-                        <th style="width: 20%;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:set var="count" value="0" />
-                    <c:forEach var="i" begin="1" end="8">
-                        <c:set var="count" value="${count + 1}" />
-                        <tr>
-                            <td>${count}</td>
-                            <td><span class="badge bg-info">E00012${i}</span></td>
-                            <td>Durant</td>
-                            <td>Élève ${i}</td>
-                            <td>eleve${i}@univ.fr</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tableau Licence 2 -->
-        <h3 class="section-title">
-            Licence 2ème année (L2) - 10 étudiants
-        </h3>
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N°</th>
-                        <th style="width: 20%;">Numéro</th>
-                        <th style="width: 25%;">Nom</th>
-                        <th style="width: 25%;">Prénoms</th>
-                        <th style="width: 20%;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:set var="count" value="0" />
-                    <c:forEach var="i" begin="1" end="10">
-                        <c:set var="count" value="${count + 1}" />
-                        <tr>
-                            <td>${count}</td>
-                            <td><span class="badge bg-info">E00022${i}</span></td>
-                            <td>Moreau</td>
-                            <td>Étudiant ${i+8}</td>
-                            <td>etudiant${i+8}@univ.fr</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tableau Licence 3 -->
-        <h3 class="section-title">
-            Licence 3ème année (L3) - 10 étudiants
-        </h3>
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N°</th>
-                        <th style="width: 20%;">Numéro</th>
-                        <th style="width: 25%;">Nom</th>
-                        <th style="width: 25%;">Prénoms</th>
-                        <th style="width: 20%;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:set var="count" value="0" />
-                    <c:forEach var="i" begin="1" end="10">
-                        <c:set var="count" value="${count + 1}" />
-                        <tr>
-                            <td>${count}</td>
-                            <td><span class="badge bg-info">E00032${i}</span></td>
-                            <td>Martin</td>
-                            <td>Apprenant ${i+18}</td>
-                            <td>apprenant${i+18}@univ.fr</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tableau Master 1 -->
-        <h3 class="section-title">
-            Master 1ère année (M1) - 10 étudiants
-        </h3>
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N°</th>
-                        <th style="width: 20%;">Numéro</th>
-                        <th style="width: 25%;">Nom</th>
-                        <th style="width: 25%;">Prénoms</th>
-                        <th style="width: 20%;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:set var="count" value="0" />
-                    <c:forEach var="i" begin="1" end="10">
-                        <c:set var="count" value="${count + 1}" />
-                        <tr>
-                            <td>${count}</td>
-                            <td><span class="badge bg-success">E00041${i}</span></td>
-                            <td>Bernard</td>
-                            <td>Master ${i}</td>
-                            <td>master${i}@univ.fr</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tableau Master 2 -->
-        <h3 class="section-title">
-            Master 2ème année (M2) - 9 étudiants
-        </h3>
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 10%;">N°</th>
-                        <th style="width: 20%;">Numéro</th>
-                        <th style="width: 25%;">Nom</th>
-                        <th style="width: 25%;">Prénoms</th>
-                        <th style="width: 20%;">Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:set var="count" value="0" />
-                    <c:forEach var="i" begin="1" end="9">
-                        <c:set var="count" value="${count + 1}" />
-                        <tr>
-                            <td>${count}</td>
-                            <td><span class="badge bg-success">E00052${i}</span></td>
-                            <td>Durand</td>
-                            <td>Master2 ${i}</td>
-                            <td>master2_${i}@univ.fr</td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+        <c:choose>
+            <c:when test="${empty niveaux}">
+                <div class="alert alert-info">Aucun étudiant trouvé. Ajoutez des étudiants pour voir les effectifs par niveau.</div>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="niveau" items="${niveaux}">
+                    <c:set var="etudiantsNiveau" value="${etudiantsByNiveau[niveau]}" />
+                    <h3 class="section-title">${niveau} — ${fn:length(etudiantsNiveau)} étudiant(s)</h3>
+                    <div class="table-container">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">N°</th>
+                                    <th style="width: 20%;">Numéro</th>
+                                    <th style="width: 25%;">Nom</th>
+                                    <th style="width: 25%;">Prénoms</th>
+                                    <th style="width: 20%;">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="etudiant" items="${etudiantsNiveau}" varStatus="status">
+                                    <tr>
+                                        <td>${status.index + 1}</td>
+                                        <td><span class="badge bg-info">${etudiant.numEtudiant}</span></td>
+                                        <td>${etudiant.nom}</td>
+                                        <td>${etudiant.prenoms}</td>
+                                        <td>${etudiant.adrEmail}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
 
         <!-- Boutons de retour -->
         <div class="mt-4 mb-4">
-            <a href="liste.jsp" class="btn btn-outline-secondary me-2">
+            <a href="${pageContext.request.contextPath}/etudiant" class="btn btn-outline-secondary me-2">
                 ← Retour à la liste
             </a>
-            <a href="../../index.jsp" class="btn btn-outline-secondary">
+            <a href="${pageContext.request.contextPath}/index.jsp" class="btn btn-outline-secondary">
                 ← Retour à l'accueil
             </a>
         </div>

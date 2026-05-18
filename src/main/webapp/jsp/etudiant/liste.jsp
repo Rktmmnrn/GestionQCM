@@ -19,8 +19,9 @@
             <div class="topbar-title">
                 Etudiants <span class="topbar-breadcrumb">/ Liste</span>
             </div>
-            <div class="topbar-actions">
+            <div class="topbar-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
                 <a href="${pageContext.request.contextPath}/etudiant?action=new" class="btn btn-primary">+ Ajouter</a>
+                <a href="${pageContext.request.contextPath}/etudiant?action=parNiveau" class="btn btn-secondary">Vue par niveau</a>
             </div>
         </div>
 

@@ -43,6 +43,9 @@ public class EtudiantServlet extends HttpServlet {
             case "search":
                 searchEtudiants(request, response);
                 break;
+            case "parNiveau":
+                showEtudiantsParNiveau(request, response);
+                break;
             default:
                 listEtudiants(request, response);
                 break;
@@ -152,5 +155,22 @@ public class EtudiantServlet extends HttpServlet {
         request.setAttribute("searchType", searchType);
         request.setAttribute("searchValue", searchValue);
         request.getRequestDispatcher("/jsp/etudiant/liste.jsp").forward(request, response);
+    }
+
+    // affichage étudiant par niveau
+    private void showEtudiantsParNiveau(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<String> niveaux = etudiantDAO.findDistinctNiveaux();
+        int totalEtudiants = etudiantDAO.countAll();
+        java.util.Map<String, java.util.List<Etudiant>> etudiantsByNiveau = new java.util.LinkedHashMap<>();
+
+        for (String niveau : niveaux) {
+            etudiantsByNiveau.put(niveau, etudiantDAO.findByNiveau(niveau));
+        }
+
+        request.setAttribute("niveaux", niveaux);
+        request.setAttribute("etudiantsByNiveau", etudiantsByNiveau);
+        request.setAttribute("totalEtudiants", totalEtudiants);
+        request.getRequestDispatcher("/jsp/etudiant/par_niveau.jsp").forward(request, response);
     }
 }

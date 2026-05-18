@@ -82,15 +82,16 @@ public class EtudiantDAO {
     
     /**
      * Recherche des étudiants par nom (recherche partielle)
-     * @param nom nom ou partie du nom à rechercher
+     * @param nomOuPrenom nom ou partie du nom à rechercher
      * @return liste des étudiants correspondants
      */
-    public List<Etudiant> findByNom(String nom) {
+    public List<Etudiant> findByNom(String nomOuPrenom) {
         List<Etudiant> etudiants = new ArrayList<>();
-        String sql = "SELECT * FROM ETUDIANT WHERE nom LIKE ? ORDER BY nom, prenoms";
+        String sql = "SELECT * FROM ETUDIANT WHERE nom LIKE ? OR prenoms LIKE ? ORDER BY nom, prenoms";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setString(1, "%" + nom + "%");
+            pstmt.setString(1, "%" + nomOuPrenom + "%");
+            pstmt.setString(2, "%" + nomOuPrenom + "%");
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -122,6 +123,42 @@ public class EtudiantDAO {
             System.err.println("Erreur lors de la recherche par niveau : " + e.getMessage());
         }
         return etudiants;
+    }
+
+    /**
+     * Récupère la liste des niveaux distincts présents dans la table ETUDIANT
+     * @return liste des niveaux
+     */
+    public List<String> findDistinctNiveaux() {
+        List<String> niveaux = new ArrayList<>();
+        String sql = "SELECT DISTINCT niveau FROM ETUDIANT ORDER BY niveau";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                niveaux.add(rs.getString("niveau"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des niveaux : " + e.getMessage());
+        }
+        return niveaux;
+    }
+
+    /**
+     * Compte le nombre total d'étudiants
+     * @return nombre total d'étudiants
+     */
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM ETUDIANT";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du comptage des étudiants : " + e.getMessage());
+        }
+        return 0;
     }
     
     /**
